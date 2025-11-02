@@ -1,0 +1,49 @@
+import {Button, Space} from "antd";
+import {useComponents} from "../../store/components";
+import ComponentTree from "./component-tree";
+import {useState} from "react";
+
+const Header: React.FC = () => {
+  const {mode, setMode, setCurComponentId} = useComponents();
+
+  const [componentTreeVisible, setComponentTreeVisible] =
+    useState<boolean>(false);
+
+  return (
+    <div className="h-[50px] flex items-center justify-end w-[100%] px-[24px]">
+      {/* header - {mode} */}
+      <div className="flex-1 font-mono font-bold">lowCode平台</div>
+      <Space>
+        {mode === "edit" && (
+          <>
+            <Button
+              onClick={() => {
+                setMode("preview");
+                setCurComponentId(undefined);
+              }}
+            >
+              预览
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                setComponentTreeVisible(true);
+              }}
+            >
+              查看大纲
+            </Button>
+          </>
+        )}
+        {mode === "preview" && (
+          <Button onClick={() => setMode("edit")}>退出预览</Button>
+        )}
+      </Space>
+      <ComponentTree
+        open={componentTreeVisible}
+        onCancel={() => setComponentTreeVisible(false)}
+      />
+    </div>
+  );
+};
+
+export default Header;
