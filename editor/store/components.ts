@@ -44,6 +44,7 @@ export function getComponentById(
   id: number,
   components: Component[]
 ): Component | null {
+  if (!id) return null; // 如果没有id，直接返回null
   for (const component of components) {
     if (component.id === id) {
       return component;

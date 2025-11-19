@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import {useComponents, type Component} from "../../store/components";
 import Space from "../../components/space";
 import Page from "../../components/page";
@@ -14,6 +14,7 @@ const ComponentMap: {[key: string]: React.FC} = {
 
 const ProdStage: React.FC = () => {
   const {components} = useComponents();
+  const componentRefs = useRef<any>({});
   //   function formatProps(component: Component) {
   //     const props = Object.keys(component.props || {}).reduce<any>(
   //       (prev, cur) => {
@@ -44,6 +45,9 @@ const ProdStage: React.FC = () => {
             key: component.id,
             id: component.id,
             "data-component-id": component.id,
+            ref: (ref: any) => {
+              componentRefs.current[component.id] = ref;
+            },
             ...component.props,
             ...props,
           },
@@ -62,7 +66,7 @@ const ProdStage: React.FC = () => {
         console.log("eventConfig===>", eventConfig);
         if (eventConfig) {
           const {type, config} = eventConfig;
-          console.log("type===>", type);
+          console.log("config===>", config);
           props[event?.name] = () => {
             // 如果动作类型是显示消息，下面根据消息类型调用显示的方法
             if (type === "showMessage") {
@@ -73,6 +77,12 @@ const ProdStage: React.FC = () => {
                 message.error(config?.text || "");
               } else {
                 message.info(config?.text || "");
+              }
+            } else if (type === "componentFunction") {
+              const component = componentRefs.current[Number(config?.id)];
+              console.log("config===>componentFunction", config, component);
+              if (component) {
+                component[config?.method]?.();
               }
             }
           };

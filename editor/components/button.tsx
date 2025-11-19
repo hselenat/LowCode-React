@@ -2,6 +2,7 @@ import React from "react";
 import {useDrop} from "react-dnd";
 import {ItemType} from "../item-type";
 import {Button as AntdButton} from "antd";
+import {forwardRef, useImperativeHandle, useState} from "react";
 
 interface Props {
   /** 当前组件的id */
@@ -16,8 +17,20 @@ interface Props {
   onClick?: () => void;
 }
 
-const Button: React.FC<Props> = (props) => {
+const Button = (props: Props, ref: any) => {
   const {id, children, text, type = "primary", onClick} = props;
+  const [loading, setLoading] = useState(false);
+  // 暴露方法：父组件可以使用ref获取组件里暴露出去的方法
+  useImperativeHandle(ref, () => {
+    return {
+      startLoading: () => {
+        setLoading(true);
+      },
+      stopLoading: () => {
+        setLoading(false);
+      },
+    };
+  });
 
   const [{canDrop}, dropRef] = useDrop(() => ({
     accept: [ItemType.Space, ItemType.Button],
@@ -43,10 +56,11 @@ const Button: React.FC<Props> = (props) => {
       style={{
         border: canDrop ? "1px solid blue" : "1px solid #ccc",
       }}
+      loading={loading}
     >
       {text || children}
     </AntdButton>
   );
 };
 
-export default Button;
+export default forwardRef(Button);

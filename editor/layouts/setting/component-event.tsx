@@ -85,6 +85,7 @@ const ComponentEvent: React.FC = () => {
         config: {
           ...curComponent?.props?.[eventName]?.config,
           method: value,
+          id: curComponentId,
         },
       },
     });
@@ -189,7 +190,7 @@ const ComponentEvent: React.FC = () => {
                     <div>
                       <Select
                         style={{width: 160}}
-                        options={componentEventMap[
+                        options={componentMethodMap[
                           curComponent?.name || ""
                         ]?.map((event) => ({
                           label: event.label,
