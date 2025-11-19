@@ -2,13 +2,26 @@ import {useMemo} from "react";
 import {ItemType} from "../../item-type";
 import {useComponents} from "../../store/components";
 import {getComponentById} from "../../store/components";
-import {Collapse, Input, Select} from "antd";
+import {Collapse, Input, Select, TreeSelect} from "antd";
 
 export const componentEventMap = {
   [ItemType.Button]: [
     {
       name: "onClick",
       label: "点击事件",
+    },
+  ],
+};
+
+export const componentMethodMap = {
+  [ItemType.Button]: [
+    {
+      name: "startLoading",
+      label: "开始loading",
+    },
+    {
+      name: "endLoading",
+      label: "结束loading",
     },
   ],
 };
@@ -61,7 +74,21 @@ const ComponentEvent: React.FC = () => {
       },
     });
   }
-
+  // 组件方法改变
+  function componentMethodChange(eventName: string, value: string) {
+    if (!curComponentId) {
+      return;
+    }
+    updateComponentProps(Number(curComponentId), {
+      [eventName]: {
+        ...curComponent?.props?.[eventName],
+        config: {
+          ...curComponent?.props?.[eventName]?.config,
+          method: value,
+        },
+      },
+    });
+  }
   if (!curComponent) {
     return null;
   }
@@ -81,46 +108,106 @@ const ComponentEvent: React.FC = () => {
                       label: "显示提示",
                       value: "showMessage",
                     },
+                    {
+                      label: "组件方法",
+                      value: "componentFunction",
+                    },
                   ]}
                   value={curComponent?.props?.[setting.name]?.type}
                   onChange={(value) => typeChange(setting.name, value)}
                 ></Select>
               </div>
             </div>
-            <div className="flex flex-col gap-[12px] mt-[12px]">
-              <div className="flex items-center gap-[10px]">
-                <span>类型：</span>
-                <div>
-                  <Select
-                    className="w-[160px]"
-                    options={[
-                      {
-                        label: "成功",
-                        value: "success",
-                      },
-                      {
-                        label: "失败",
-                        value: "error",
-                      },
-                    ]}
-                    value={curComponent?.props?.[setting.name]?.config?.type}
-                    onChange={(value) => messageTypeChange(setting.name, value)}
-                  ></Select>
+            {curComponent.props?.[setting.name]?.type === "showMessage" && (
+              <div>
+                <div className="flex flex-col gap-[12px] mt-[12px]">
+                  <div className="flex items-center gap-[10px]">
+                    <span>类型：</span>
+                    <div>
+                      <Select
+                        className="w-[160px]"
+                        options={[
+                          {
+                            label: "成功",
+                            value: "success",
+                          },
+                          {
+                            label: "失败",
+                            value: "error",
+                          },
+                        ]}
+                        value={
+                          curComponent?.props?.[setting.name]?.config?.type
+                        }
+                        onChange={(value) =>
+                          messageTypeChange(setting.name, value)
+                        }
+                      ></Select>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-[10px] mt-[12px]">
+                  <span>文本：</span>
+                  <div>
+                    <Input
+                      className="w-[160px]"
+                      value={curComponent?.props?.[setting.name]?.config?.text}
+                      onChange={(e) =>
+                        messageTextChange(setting.name, e.target.value)
+                      }
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="flex items-center gap-[10px] mt-[12px]">
-              <span>文本：</span>
-              <div>
-                <Input
-                  className="w-[160px]"
-                  value={curComponent?.props?.[setting.name]?.config?.text}
-                  onChange={(e) =>
-                    messageTextChange(setting.name, e.target.value)
-                  }
-                />
+            )}
+            {curComponent.props?.[setting.name]?.type ===
+              "componentFunction" && (
+              <div className="flex flex-col gap-[12px] mt-[12px]">
+                <div
+                  style={{display: "flex", alignItems: "center", gap: "10px"}}
+                >
+                  <div>组件：</div>
+                  <div>
+                    <TreeSelect
+                      style={{width: 160}}
+                      treeData={components}
+                      fieldNames={{
+                        label: "name",
+                        value: "id",
+                      }}
+                      value={
+                        curComponent?.props?.[setting.name]?.config?.componentId
+                      }
+                      onChange={(value) => {
+                        componentMethodChange(setting.name, value);
+                      }}
+                    ></TreeSelect>
+                  </div>
+                </div>
+                {componentEventMap[curComponent?.name] && (
+                  <div className="flex algin-center gap-[10px]">
+                    <div>方法：</div>
+                    <div>
+                      <Select
+                        style={{width: 160}}
+                        options={componentEventMap[
+                          curComponent?.name || ""
+                        ]?.map((event) => ({
+                          label: event.label,
+                          value: event.name,
+                        }))}
+                        value={
+                          curComponent?.props?.[setting.name]?.config?.method
+                        }
+                        onChange={(value) =>
+                          componentMethodChange(setting.name, value)
+                        }
+                      ></Select>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
+            )}
           </Collapse.Panel>
         </Collapse>
       ))}
