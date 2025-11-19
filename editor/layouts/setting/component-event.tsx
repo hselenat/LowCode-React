@@ -89,6 +89,7 @@ const ComponentEvent: React.FC = () => {
       },
     });
   }
+
   if (!curComponent) {
     return null;
   }
@@ -163,9 +164,7 @@ const ComponentEvent: React.FC = () => {
             {curComponent.props?.[setting.name]?.type ===
               "componentFunction" && (
               <div className="flex flex-col gap-[12px] mt-[12px]">
-                <div
-                  style={{display: "flex", alignItems: "center", gap: "10px"}}
-                >
+                <div style={{display: "flex", alignItems: "center", gap: 10}}>
                   <div>组件：</div>
                   <div>
                     <TreeSelect
