@@ -2,11 +2,14 @@ import {Button, Space} from "antd";
 import {useComponents} from "../../store/components";
 import ComponentTree from "./component-tree";
 import {useState} from "react";
+import DefineVariable from "./define-variable";
 
 const Header: React.FC = () => {
   const {mode, setMode, setCurComponentId} = useComponents();
 
   const [componentTreeVisible, setComponentTreeVisible] =
+    useState<boolean>(false);
+  const [defineVariableVisible, setDefineVariableVisible] =
     useState<boolean>(false);
 
   return (
@@ -32,6 +35,14 @@ const Header: React.FC = () => {
             >
               查看大纲
             </Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                setDefineVariableVisible(true);
+              }}
+            >
+              定义变量
+            </Button>
           </>
         )}
         {mode === "preview" && (
@@ -41,6 +52,10 @@ const Header: React.FC = () => {
       <ComponentTree
         open={componentTreeVisible}
         onCancel={() => setComponentTreeVisible(false)}
+      />
+      <DefineVariable
+        open={defineVariableVisible}
+        onCancel={() => setDefineVariableVisible(false)}
       />
     </div>
   );

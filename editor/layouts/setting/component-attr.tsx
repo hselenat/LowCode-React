@@ -1,7 +1,8 @@
-import {Form, Input, Select} from "antd";
+import {Form, Select} from "antd";
 import {useEffect, useMemo} from "react";
 import {ItemType} from "../../item-type";
 import {useComponents, getComponentById} from "../../store/components";
+import SettingFormItemInput from "../../common/setting-form-item/input";
 
 const componentSettingMap = {
   [ItemType.Button]: [
@@ -77,7 +78,7 @@ const ComponentAttr: React.FC = () => {
       return <Select options={options} />;
     }
     if (type === "input") {
-      return <Input />;
+      return <SettingFormItemInput />;
     }
   }
 
