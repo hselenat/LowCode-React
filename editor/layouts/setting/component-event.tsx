@@ -1,6 +1,6 @@
-import {useMemo} from "react";
+import {useState} from "react";
 import {ItemType} from "../../item-type";
-import {useComponents} from "../../store/components";
+import {useComponents, type Component} from "../../store/components";
 import {getComponentById} from "../../store/components";
 import {Collapse, Input, Select, TreeSelect} from "antd";
 
@@ -28,10 +28,10 @@ export const componentMethodMap = {
 
 const ComponentEvent: React.FC = () => {
   const {curComponentId, updateComponentProps, components} = useComponents();
+  const [selectedComponent, setSelectedComponent] =
+    useState<Component | null>();
 
-  const curComponent = useMemo(() => {
-    return getComponentById(Number(curComponentId), components);
-  }, [curComponentId]);
+  const curComponent = getComponentById(Number(curComponentId), components);
 
   // 事件类型改变
   function typeChange(eventName: string, value: string) {
@@ -74,6 +74,25 @@ const ComponentEvent: React.FC = () => {
       },
     });
   }
+
+  // 改变选择被触发的组件
+  function componentChange(eventName: string, value: number) {
+    if (!curComponentId) {
+      return;
+    }
+    const component = getComponentById(value, components);
+    setSelectedComponent(component);
+    updateComponentProps(Number(curComponentId), {
+      [eventName]: {
+        ...curComponent?.props?.[eventName],
+        config: {
+          ...curComponent?.props?.[eventName]?.config,
+          componentId: value,
+        },
+      },
+    });
+  }
+
   // 组件方法改变
   function componentMethodChange(eventName: string, value: string) {
     if (!curComponentId) {
@@ -85,7 +104,6 @@ const ComponentEvent: React.FC = () => {
         config: {
           ...curComponent?.props?.[eventName]?.config,
           method: value,
-          id: curComponentId,
         },
       },
     });
@@ -179,12 +197,12 @@ const ComponentEvent: React.FC = () => {
                         curComponent?.props?.[setting.name]?.config?.componentId
                       }
                       onChange={(value) => {
-                        componentMethodChange(setting.name, value);
+                        componentChange(setting.name, value);
                       }}
                     ></TreeSelect>
                   </div>
                 </div>
-                {componentEventMap[curComponent?.name] && (
+                {componentEventMap[selectedComponent?.name || ""] && (
                   <div className="flex algin-center gap-[10px]">
                     <div>方法：</div>
                     <div>

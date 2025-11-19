@@ -26,7 +26,7 @@ const Button = (props: Props, ref: any) => {
       startLoading: () => {
         setLoading(true);
       },
-      stopLoading: () => {
+      endLoading: () => {
         setLoading(false);
       },
     };

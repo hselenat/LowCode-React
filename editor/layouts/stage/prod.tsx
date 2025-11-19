@@ -79,7 +79,8 @@ const ProdStage: React.FC = () => {
                 message.info(config?.text || "");
               }
             } else if (type === "componentFunction") {
-              const component = componentRefs.current[Number(config?.id)];
+              const component =
+                componentRefs.current[Number(config?.componentId)];
               console.log("config===>componentFunction", config, component);
               if (component) {
                 component[config?.method]?.();
