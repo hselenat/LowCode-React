@@ -20,19 +20,42 @@ const EditStage: React.FC = () => {
   const hoverMaskRef = useRef<any>(null);
   const [hoverComponentId, setHoverComponentId] = useState<number | null>(null);
   console.log("components", components);
+  function formatProps(component: Component) {
+    const props = Object.keys(component.props || {}).reduce<any>(
+      (prev, cur) => {
+        if (typeof component.props[cur] === "object") {
+          if (component.props[cur]?.type === "static") {
+            prev[cur] = component.props[cur].value;
+          } else if (component.props[cur]?.type === "variable") {
+            const variableName = component.props[cur].value;
+            prev[cur] = `\${${variableName}}`;
+          }
+        } else {
+          prev[cur] = component.props[cur];
+        }
+        return prev;
+      },
+      {}
+    );
+    return props;
+  }
   function renderComponent(components: Component[]): React.ReactNode {
     return components.map((component) => {
       if (!ComponentMap[component.name]) return null;
-      return React.createElement(
-        ComponentMap[component.name],
-        {
-          key: component.id,
-          id: component.id,
-          "data-component-id": component.id,
-          ...component.props,
-        },
-        component.props.children || renderComponent(component.children || [])
-      );
+      const props = formatProps(component);
+      if (ComponentMap[component.name]) {
+        return React.createElement(
+          ComponentMap[component.name],
+          {
+            key: component.id,
+            id: component.id,
+            "data-component-id": component.id,
+            ...component.props,
+            ...props,
+          },
+          component.props.children || renderComponent(component.children || [])
+        );
+      }
     });
   }
   // 如果拖拽的组件是可以放置的，canDrop为true，通过这个可以给组件添加边框

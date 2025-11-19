@@ -1,5 +1,3 @@
-import type React from "react";
-
 import {PlusOutlined, MinusCircleOutlined} from "@ant-design/icons";
 import {Button, Form, Input, Modal, Select, Space} from "antd";
 import {useVariableStore, type Variable} from "../../store/variable";

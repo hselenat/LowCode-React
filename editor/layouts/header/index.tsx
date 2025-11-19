@@ -3,9 +3,11 @@ import {useComponents} from "../../store/components";
 import ComponentTree from "./component-tree";
 import {useState} from "react";
 import DefineVariable from "./define-variable";
+import {usePageDataStore} from "../../store/page-data";
 
 const Header: React.FC = () => {
   const {mode, setMode, setCurComponentId} = useComponents();
+  const {resetData} = usePageDataStore();
 
   const [componentTreeVisible, setComponentTreeVisible] =
     useState<boolean>(false);
@@ -23,6 +25,7 @@ const Header: React.FC = () => {
               onClick={() => {
                 setMode("preview");
                 setCurComponentId(undefined);
+                resetData();
               }}
             >
               预览

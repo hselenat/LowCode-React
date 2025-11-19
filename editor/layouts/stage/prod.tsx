@@ -5,6 +5,8 @@ import Page from "../../components/page";
 import Button from "../../components/button";
 import {message} from "antd";
 import {componentEventMap} from "../../layouts/setting/component-event";
+import {usePageDataStore} from "../../store/page-data";
+import {useVariableStore} from "../../store/variable";
 
 const ComponentMap: {[key: string]: React.FC} = {
   Button: Button as React.FC,
@@ -15,6 +17,8 @@ const ComponentMap: {[key: string]: React.FC} = {
 const ProdStage: React.FC = () => {
   const {components} = useComponents();
   const componentRefs = useRef<any>({});
+  const {variables} = useVariableStore();
+  const {data} = usePageDataStore();
   //   function formatProps(component: Component) {
   //     const props = Object.keys(component.props || {}).reduce<any>(
   //       (prev, cur) => {
@@ -31,12 +35,38 @@ const ProdStage: React.FC = () => {
   //     );
   //     return props;
   //   }
+  function formatProps(component: Component) {
+    const props = Object.keys(component.props || {}).reduce<any>(
+      (prev, cur) => {
+        // 如果组件属性是对象，则判断是静态值还是变量
+        if (typeof component.props[cur] === "object") {
+          // 如果是静态值，则直接赋值。如果是变量，则取变量中的默认值
+          if (component.props[cur]?.type === "static") {
+            prev[cur] = component.props[cur]?.value;
+          } else if (component.props[cur]?.type === "variable") {
+            const variableName = component.props[cur].value;
+            const variable = variables.find(
+              (item) => item.name === variableName
+            );
+            // 如果data中有值，则取data中的值，否则取变量的默认值
+            prev[cur] = data[variableName] || variable?.defaultValue || "";
+          }
+        } else {
+          // 如果是变量，则取data的值
+          prev[cur] = component.props[cur];
+        }
+        return prev;
+      },
+      {} as Record<string, unknown>
+    );
+    return props;
+  }
   function renderComponents(components: Component[]): React.ReactNode {
     return components.map((component) => {
       if (!ComponentMap[component.name]) {
         return null;
       }
-      let props = component.props || {}; // formatProps(component);
+      let props = formatProps(component);
       props = {...props, ...handleEvent(component)};
       if (ComponentMap[component.name]) {
         return React.createElement(
