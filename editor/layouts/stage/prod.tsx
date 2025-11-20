@@ -18,7 +18,7 @@ const ProdStage: React.FC = () => {
   const {components} = useComponents();
   const componentRefs = useRef<any>({});
   const {variables} = useVariableStore();
-  const {data} = usePageDataStore();
+  const {data, setData} = usePageDataStore();
   //   function formatProps(component: Component) {
   //     const props = Object.keys(component.props || {}).reduce<any>(
   //       (prev, cur) => {
@@ -35,6 +35,22 @@ const ProdStage: React.FC = () => {
   //     );
   //     return props;
   //   }
+
+  // 获取组件实例
+  function getComponentRef(componentId: string) {
+    return componentRefs.current[componentId];
+  }
+
+  function execScript(script: string) {
+    const func = new Function("ctx", script);
+    const ctx = {
+      // TODO
+      setData,
+      getComponentRef,
+    };
+    func(ctx);
+  }
+
   function formatProps(component: Component) {
     const props = Object.keys(component.props || {}).reduce<any>(
       (prev, cur) => {
@@ -115,6 +131,11 @@ const ProdStage: React.FC = () => {
               if (component) {
                 component[config?.method]?.();
               }
+            } else if (type === "setVariable") {
+              const {variableName, value} = config;
+              setData(variableName, value);
+            } else if (type === "execScript") {
+              execScript(config.script);
             }
           };
         }

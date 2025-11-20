@@ -109,6 +109,22 @@ const ComponentEvent: React.FC = () => {
     });
   }
 
+  // 脚本改变
+  function scriptChange(eventName: string, value: string) {
+    if (!curComponentId) {
+      return;
+    }
+    updateComponentProps(Number(curComponentId), {
+      [eventName]: {
+        ...curComponent?.props?.[eventName],
+        config: {
+          ...curComponent?.props?.[eventName]?.config,
+          script: value,
+        },
+      },
+    });
+  }
+
   if (!curComponent) {
     return null;
   }
@@ -131,6 +147,10 @@ const ComponentEvent: React.FC = () => {
                     {
                       label: "组件方法",
                       value: "componentFunction",
+                    },
+                    {
+                      label: "执行脚本",
+                      value: "execScript",
                     },
                   ]}
                   value={curComponent?.props?.[setting.name]?.type}
@@ -224,6 +244,35 @@ const ComponentEvent: React.FC = () => {
                     </div>
                   </div>
                 )}
+              </div>
+            )}
+            {/* (function(ctx) {
+              // // TODO
+              console.log(ctx)
+              setTimeout(function() {
+                ctx.setData('name', '123')
+              }, 1000)
+            })(ctx)  */}
+            {curComponent?.props?.[setting.name]?.type === "execScript" && (
+              <div className="flex flex-col gap-[12px] mt-[12px]">
+                <div className="flex align-center gap-[10px]">
+                  <span>脚本：</span>
+                  <div>
+                    <Input.TextArea
+                      defaultValue={`(function(ctx) {
+                              // TODO
+                              })(ctx) `}
+                      className="w-[160px]"
+                      rows={6}
+                      value={
+                        curComponent?.props?.[setting.name]?.config?.script
+                      }
+                      onChange={(e) =>
+                        scriptChange(setting.name, e.target.value)
+                      }
+                    />
+                  </div>
+                </div>
               </div>
             )}
           </Collapse.Panel>
