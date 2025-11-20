@@ -23,7 +23,7 @@ const componentSettingMap = {
       ],
     },
     {
-      name: "children",
+      name: "text",
       label: "按钮文本",
       type: "input",
     },
@@ -58,6 +58,7 @@ const componentSettingMap = {
     },
   ],
 };
+
 const ComponentAttr: React.FC = () => {
   const {components, curComponentId, updateComponentProps} = useComponents();
   // const curComponent = components[curComponentId];
@@ -68,10 +69,10 @@ const ComponentAttr: React.FC = () => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    form.setFieldsValue(curComponent?.props || {});
+    form.setFieldsValue(curComponent?.props);
   }, [curComponentId, curComponent, form]);
 
-  /** 动态渲染表单元素 */
+  // 动态渲染表单元素
   function renderFormElement(setting: any) {
     const {type, options} = setting;
     if (type === "select") {
@@ -83,18 +84,16 @@ const ComponentAttr: React.FC = () => {
   }
 
   function onValueChange(changeValues: any) {
-    console.log(changeValues);
     if (curComponentId) {
-      // 更新组件属性
+      // 更新组件的props
       updateComponentProps(Number(curComponentId), changeValues);
     }
   }
 
   if (!curComponent) return null;
-
   return (
     <Form form={form} onValuesChange={onValueChange}>
-      {componentSettingMap[curComponent.name].map((setting) => (
+      {componentSettingMap[curComponent.name]?.map((setting: any) => (
         <Form.Item
           name={setting.name}
           label={setting.label}
