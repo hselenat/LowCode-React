@@ -1,8 +1,9 @@
-import {useState} from "react";
+import {useState, useRef} from "react";
 import {ItemType} from "../../item-type";
 import {useComponents, type Component} from "../../store/components";
 import {getComponentById} from "../../store/components";
-import {Collapse, Input, Select, TreeSelect} from "antd";
+import {Collapse, Input, Select, TreeSelect, Drawer, Button} from "antd";
+import FlowEvent from "../flow-event";
 
 export const componentEventMap = {
   [ItemType.Button]: [
@@ -30,8 +31,10 @@ const ComponentEvent: React.FC = () => {
   const {curComponentId, updateComponentProps, components} = useComponents();
   const [selectedComponent, setSelectedComponent] =
     useState<Component | null>();
-
+  const [open, setOpen] = useState(false);
+  const [eventName, setEventName] = useState("");
   const curComponent = getComponentById(Number(curComponentId), components);
+  const flowEventRef = useRef<any>(null);
 
   // 事件类型改变
   function typeChange(eventName: string, value: string) {
@@ -129,9 +132,52 @@ const ComponentEvent: React.FC = () => {
     return null;
   }
 
+  function save() {}
+
   return (
     <div className="w-[250px]">
-      {componentEventMap[curComponent?.name || ""].map((setting) => (
+      {(componentEventMap[curComponent?.name] || []).map((setting) => {
+        return (
+          <Collapse key={setting.name} defaultActiveKey={setting.name}>
+            <Collapse.Panel header={setting.label} key={setting.name}>
+              <Button
+                type="primary"
+                onClick={() => {
+                  setOpen(true);
+                  setEventName(setting.name);
+                }}
+              >
+                设置事件流
+              </Button>
+            </Collapse.Panel>
+          </Collapse>
+        );
+      })}
+      <Drawer
+        title="设置事件流"
+        open={open}
+        zIndex={1000}
+        width={600}
+        onClose={() => setOpen(false)}
+        extra={
+          <Button type="primary" onClick={() => save}>
+            保存
+          </Button>
+        }
+        push={false}
+        destroyOnHidden
+        styles={{
+          body: {
+            padding: 0,
+          },
+        }}
+      >
+        <FlowEvent
+          flowData={curComponent?.props?.[eventName]}
+          ref={flowEventRef}
+        />
+      </Drawer>
+      {/* {componentEventMap[curComponent?.name || ""].map((setting) => (
         <Collapse key={setting.name} defaultActiveKey={setting.name}>
           <Collapse.Panel header={setting.label} key={setting.name}>
             <div className="flex items-center gap-[10px]">
@@ -246,13 +292,6 @@ const ComponentEvent: React.FC = () => {
                 )}
               </div>
             )}
-            {/* (function(ctx) {
-              // // TODO
-              console.log(ctx)
-              setTimeout(function() {
-                ctx.setData('name', '123')
-              }, 1000)
-            })(ctx)  */}
             {curComponent?.props?.[setting.name]?.type === "execScript" && (
               <div className="flex flex-col gap-[12px] mt-[12px]">
                 <div className="flex align-center gap-[10px]">
@@ -277,7 +316,7 @@ const ComponentEvent: React.FC = () => {
             )}
           </Collapse.Panel>
         </Collapse>
-      ))}
+      ))} */}
     </div>
   );
 };
