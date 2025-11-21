@@ -44,10 +44,12 @@ const ProdStage: React.FC = () => {
   function execScript(script: string) {
     const func = new Function("ctx", script);
     const ctx = {
-      // TODO
+      // TODO 操作数据，通过组件操作自身的方法等，或者和浏览器相关的，或者操作dom的一些方法都可以通过脚本去实现
+      // 组件自定义逻辑
       setData,
       getComponentRef,
     };
+    // 注入上下文数据，组件可以通过ctx来操作数据
     func(ctx);
   }
 
