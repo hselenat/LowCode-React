@@ -7,11 +7,25 @@ import Page from "../../components/page";
 import Button from "../../components/button";
 import SelectedMask from "../../common/selected-mask";
 import HoverMask from "../../common/hover-mask";
+import {loadRemoteComponent} from "../../utils";
+
+// 动态加载组件，避免首屏加载所有组件
+// const LazyButton = React.lazy(() => import("../../components/button"));
+// const LazyRemoteComponent = React.lazy(() =>
+//   loadRemoteComponent(
+//     "https://cdn.jsdelivr.net/npm/dbfu-remote-component@1.0.1/dist/bundle.umd.js'"
+//   )
+// );
 
 const ComponentMap: {[key: string]: React.FC} = {
   Button: Button as React.FC,
   Space: Space as React.FC,
   Page: Page as React.FC,
+  RemoteComponent: React.lazy(() =>
+    loadRemoteComponent(
+      "https://cdn.jsdelivr.net/npm/dbfu-remote-component@1.0.1/dist/bundle.umd.js"
+    )
+  ),
 };
 
 const EditStage: React.FC = () => {
@@ -60,7 +74,7 @@ const EditStage: React.FC = () => {
   }
   // 如果拖拽的组件是可以放置的，canDrop为true，通过这个可以给组件添加边框
   const [{canDrop}, dropRef] = useDrop({
-    accept: [ItemType.Button, ItemType.Space],
+    accept: [ItemType.Button, ItemType.Space, ItemType.RemoteComponent],
     drop: (_, monitor) => {
       const didDrop = monitor.didDrop();
       if (didDrop) return;

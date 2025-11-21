@@ -10,7 +10,9 @@ const Material: React.FC = () => {
       {
         id: new Date().getTime(),
         name: dropResult.name,
-        props: {...dropResult.props},
+        props: {
+          ...dropResult.props,
+        },
       },
       dropResult.id
     );
@@ -25,6 +27,11 @@ const Material: React.FC = () => {
       <ComponentItem
         name={ItemType.Space}
         description="间距"
+        onDragEnd={onDragEnd}
+      />
+      <ComponentItem
+        name={ItemType.RemoteComponent}
+        description="远程组件"
         onDragEnd={onDragEnd}
       />
     </div>

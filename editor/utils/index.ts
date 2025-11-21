@@ -23,20 +23,29 @@ export function getComponentById(
   return null;
 }
 
-function execScript(script: string) {
-  const func = new Function("ctx", script);
-  const ctx = {
-    // TODO
-  };
-  func(ctx);
-}
+// 源代码
+// function app() {
+//     return <div>test</div>
+// }
+// umd打包之后的内容，这里只是示例：
+// (function (global, factory) {
+//   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('react')) :
+//   typeof define === 'function' && define.amd ? define(['react'], factory) :
+//   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.dbfuButton = factory(global.React));
+// })(this, (function (React) {
+//     'use strict';
+//     function RemoteComponent() {
+//         return (React.createElement("div", null, "test"));
+//     }
+//     return RemoteComponent;
+// }));
 
 /**
  * 加载远程组件
  */
 export async function loadRemoteComponent(url: string) {
   console.log(url);
-
+  // 定义一个脚本
   const script = await fetch(url).then((res) => res.text());
   console.log(script);
   const module = {exports: {}};
@@ -47,6 +56,7 @@ export async function loadRemoteComponent(url: string) {
       return React;
     }
   };
+  // 使用new Function()动态执行这段脚本，再把module、exports和require这些变量注入进去
   const func = new Function("module", "exports", "require", script);
   func(module, exports, require);
   return {default: module.exports} as any;
