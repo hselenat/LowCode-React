@@ -3,6 +3,12 @@ import {Drawer, Button} from "antd";
 import G6 from "@antv/g6";
 import defaultLayout from "./default-layout";
 import {data} from "./data";
+import {registerNodes} from "./nodes";
+import {registerLines} from "./lines";
+import {getTreeDepth} from "./utils";
+
+registerNodes();
+registerLines();
 
 const EventFlowDesign = ({flowData}: any, ref: any) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -10,11 +16,12 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
 
   useEffect(() => {
     const {width} = containerRef.current?.getBoundingClientRect() || {};
+    const depth = getTreeDepth(flowData || data);
     const graph = new G6.TreeGraph({
       container: containerRef.current,
       width,
       // 根据树的深度计算画布的高度
-      height: 400,
+      height: depth * 40 + 56 * (depth - 1) + 200,
       linkCenter: true,
       layout: defaultLayout,
       defaultNode: {
