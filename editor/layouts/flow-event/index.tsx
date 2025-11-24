@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {forwardRef, useRef, useState, useEffect} from "react";
 import {Drawer, Button} from "antd";
 import G6 from "@antv/g6";

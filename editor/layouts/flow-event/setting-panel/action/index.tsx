@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Form, Select} from "antd";
 import React, {forwardRef, useImperativeHandle, useState} from "react";
 import ShowMessageSetting from "./show-message";

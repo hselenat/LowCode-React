@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Form, Input} from "antd";
 
 /**
@@ -6,6 +7,7 @@ import {Form, Input} from "antd";
  * @returns
  */
 function ExecScriptSetting({values}: {values: any}) {
+  console.log("execScript", values);
   return (
     <Form>
       <Form.Item label="执行脚本" name="execScript">

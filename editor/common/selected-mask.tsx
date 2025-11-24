@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {createPortal} from "react-dom";
 import {useState, forwardRef, useImperativeHandle, useEffect} from "react";
 interface props {

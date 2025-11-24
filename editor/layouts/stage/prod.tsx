@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {useRef} from "react";
 import {useComponents, type Component} from "../../store/components";
 import Space from "../../components/space";

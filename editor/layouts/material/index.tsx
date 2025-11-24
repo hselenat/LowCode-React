@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ComponentItem from "../../common/component-item";
 import {ItemType} from "../../item-type";
 import {useComponents} from "../../store/components";

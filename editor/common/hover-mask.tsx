@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Dropdown, Space} from "antd";
 import {useState, forwardRef, useEffect, useMemo} from "react";
 import {createPortal} from "react-dom";

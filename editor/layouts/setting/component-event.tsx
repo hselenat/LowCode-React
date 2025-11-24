@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {useState, useRef} from "react";
 import {ItemType} from "../../item-type";
 import {useComponents, type Component} from "../../store/components";

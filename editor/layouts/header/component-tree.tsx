@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Modal, Tree} from "antd";
 import {useComponents} from "../../store/components";
 

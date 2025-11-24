@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type {Component} from "../stores/components";
 import React from "react";
 /**

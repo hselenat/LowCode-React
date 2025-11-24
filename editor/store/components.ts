@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {create} from "zustand";
 
 // 处理画布的增删行为

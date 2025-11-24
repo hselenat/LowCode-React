@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Modal, Table} from "antd";
 import {useVariableStore} from "../../store/variable";
 

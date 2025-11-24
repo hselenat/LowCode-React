@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import G6 from "@antv/g6";
 export const registerLines = () => {
   G6.registerEdge("flow-line", {
