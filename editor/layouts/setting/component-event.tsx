@@ -157,7 +157,7 @@ const ComponentEvent: React.FC = () => {
         title="设置事件流"
         open={open}
         zIndex={1000}
-        width={600}
+        width="100vw"
         onClose={() => setOpen(false)}
         extra={
           <Button type="primary" onClick={() => save}>
