@@ -51,6 +51,17 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
       const targetType = target?.get("type");
       const name = target?.get("name");
       const model = item.getModel();
+
+      if (
+        ["condition", "action"].includes(model.type) &&
+        targetType !== "marker"
+      ) {
+        curModelRef.current = item.getModel();
+        setSettingOpen(true);
+        setMenuOpen(false);
+        return;
+      }
+
       // 添加新的节点
       if (targetType === "marker" && name === "add-item") {
         // 显示选择菜单: 获取节点的位置，然后在正确的位置渲染选项菜单
@@ -155,9 +166,9 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
         title="设置"
         open={settingOpen}
         zIndex={1005}
-        width={500}
+        width={300}
         onClose={() => setSettingOpen(false)}
-        extra={<Button onClick={() => saveSetting}>取消</Button>}
+        extra={<Button onClick={() => saveSetting}>确定</Button>}
         destoryOnHidden={true}
       >
         345
