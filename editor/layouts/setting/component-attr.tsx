@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Form, Select} from "antd";
 import {useEffect, useMemo} from "react";
 import {ItemType} from "../../item-type";

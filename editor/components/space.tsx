@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Space as AntdSpace} from "antd";
 import React from "react";
 import {useDrop} from "react-dnd";

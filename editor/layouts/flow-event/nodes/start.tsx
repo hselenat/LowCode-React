@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {EXPAND_ICON} from "../icons";
 
 export const startNode: any = {

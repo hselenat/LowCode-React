@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // 获取树的深度
 export function getTreeDepth(node: any) {
   if (!node) {

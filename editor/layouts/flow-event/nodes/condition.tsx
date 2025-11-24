@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {COLLAPSE_ICON, EXPAND_ICON} from "../icons";
 
 export const conditionNode: any = {

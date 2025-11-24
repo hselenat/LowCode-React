@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Button, Space, Input, Modal} from "antd";
 import {forwardRef, useImperativeHandle, useState} from "react";
 import {SettingOutlined} from "@ant-design/icons";
