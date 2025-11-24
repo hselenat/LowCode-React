@@ -138,19 +138,27 @@ const ComponentEvent: React.FC = () => {
     <div className="w-[250px]">
       {(componentEventMap[curComponent?.name] || []).map((setting) => {
         return (
-          <Collapse key={setting.name} defaultActiveKey={setting.name}>
-            <Collapse.Panel header={setting.label} key={setting.name}>
-              <Button
-                type="primary"
-                onClick={() => {
-                  setOpen(true);
-                  setEventName(setting.name);
-                }}
-              >
-                设置事件流
-              </Button>
-            </Collapse.Panel>
-          </Collapse>
+          <Collapse
+            key={setting.name}
+            defaultActiveKey={setting.name}
+            items={[
+              {
+                header: setting.label,
+                key: setting.name,
+                children: (
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      setOpen(true);
+                      setEventName(setting.name);
+                    }}
+                  >
+                    设置事件流
+                  </Button>
+                ),
+              },
+            ]}
+          />
         );
       })}
       <Drawer
