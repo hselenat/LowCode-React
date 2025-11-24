@@ -30,7 +30,7 @@ const ContextMenu: React.FC<Props> = (props: Props) => {
           onClick: onSelect,
         }}
         trigger={["click"]}
-        visible={open}
+        // visible={open}
         open={open}
       />
     </div>
