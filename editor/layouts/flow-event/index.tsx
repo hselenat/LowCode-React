@@ -1,4 +1,4 @@
-import {forwardRef, useRef, useState, useEffect} from "react";
+import React, {forwardRef, useRef, useState, useEffect} from "react";
 import {Drawer, Button} from "antd";
 import G6 from "@antv/g6";
 import defaultLayout from "./default-layout";
@@ -7,9 +7,17 @@ import {registerNodes} from "./nodes";
 import {registerLines} from "./lines";
 import {getTreeDepth} from "./utils";
 import ContextMenu from "./context-menu";
+import ActionSettingPanel from "./setting-panel/action";
+import ConditionSettingPanel from "./setting-panel/condition";
 
 registerNodes();
 registerLines();
+
+// 节点类型映射
+const settingMap: any = {
+  action: ActionSettingPanel,
+  condition: ConditionSettingPanel,
+};
 
 const EventFlowDesign = ({flowData}: any, ref: any) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -18,6 +26,7 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const curModelRef = useRef<any>({}); // 保存当前选中的节点
   const graphRef = useRef<any>(null); // 保存当前选中的节点
+  const settingRef = useRef<any>(null); // 保存当前选中的节点
 
   useEffect(() => {
     const {width} = containerRef.current?.getBoundingClientRect() || {};
@@ -26,7 +35,7 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
       container: containerRef.current,
       width,
       // 根据树的深度计算画布的高度
-      height: depth * 40 + 56 * (depth - 1) + 400,
+      height: depth * 40 + 56 * (depth - 1) + 200,
       linkCenter: true,
       layout: defaultLayout,
       defaultNode: {
@@ -35,6 +44,17 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
       animateCfg: {
         duration: 150,
       },
+    });
+    // 添加或者删除节点后，更新画布，因为画布高度会根据节点数变化
+    graph.on("afteradditem", () => {
+      const newData = graph.save();
+      const depth = getTreeDepth(newData);
+      graph.changeSize(width, depth * 40 + 56 * (depth - 1) + 200);
+    });
+    graph.on("afterremoveitem", (evt: any) => {
+      const newData = graph.save();
+      const depth = getTreeDepth(newData);
+      graph.changeSize(width, depth * 40 + 56 * (depth - 1) + 200);
     });
     // 初始化数据
     graph.data(flowData || data);
@@ -51,7 +71,10 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
       const targetType = target?.get("type");
       const name = target?.get("name");
       const model = item.getModel();
-
+      // 统一节点，不允许重复添加
+      // if (model.id === curModelRef.current.id) {
+      //   return;
+      // }
       if (
         ["condition", "action"].includes(model.type) &&
         targetType !== "marker"
@@ -91,6 +114,10 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
       }
       //   console.log("item===>", item);
     });
+    graph.on("canvas:click", (evt: any) => {
+      setMenuOpen(false);
+      curModelRef.current = null;
+    });
 
     return () => {
       graph.destroy();
@@ -128,6 +155,7 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
         },
       ];
     }
+    // TODO: 只有父节点是条件节点，才允许添加多个子节点
     // push 到curModelRef中
     curModelRef.current.children.push({
       id,
@@ -143,7 +171,10 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
     curModelRef.current = null;
   };
 
-  function saveSetting() {}
+  function saveSetting() {
+    settingRef.current?.save();
+  }
+
   return (
     <div>
       <div
@@ -168,10 +199,17 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
         zIndex={1005}
         width={300}
         onClose={() => setSettingOpen(false)}
-        extra={<Button onClick={() => saveSetting}>确定</Button>}
+        extra={<Button onClick={() => saveSetting()}>确定</Button>}
         destoryOnHidden={true}
       >
-        345
+        {(settingMap[curModelRef.current?.type] &&
+          React.createElement(settingMap[curModelRef.current?.type], {
+            graphRef,
+            curModelRef,
+            setSettingOpen,
+            ref: settingRef,
+          })) ||
+          null}
       </Drawer>
     </div>
   );
