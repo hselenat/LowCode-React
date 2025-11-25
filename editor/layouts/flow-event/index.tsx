@@ -45,16 +45,42 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
         duration: 150,
       },
     });
-    // 添加或者删除节点后，更新画布，因为画布高度会根据节点数变化
+    // 添加节点后，更新画布，因为画布高度会根据节点数变化
     graph.on("afteradditem", () => {
       const newData = graph.save();
       const depth = getTreeDepth(newData);
       graph.changeSize(width, depth * 40 + 56 * (depth - 1) + 200);
     });
+    // 删除节点后，更新画布
     graph.on("afterremoveitem", (evt: any) => {
       const newData = graph.save();
       const depth = getTreeDepth(newData);
       graph.changeSize(width, depth * 40 + 56 * (depth - 1) + 200);
+    });
+    // 自定义线的类型
+    graph.edge((config: any) => {
+      // 获取线的源节点和目标节点
+      const sourceNode = graph.findById(config.source);
+      const targetNode = graph.findById(config.target);
+      // 获取源节点和目标节点的配置
+      const sourceModel = sourceNode?.getModel();
+      const targetModel = targetNode?.getModel();
+      // 如果源节点和目标节点都是条件节点，则使用条件线
+      let label = "";
+      // 如果是条件节点
+      if (sourceModel?.type === "condition") {
+        const {name} = sourceModel?.config?.find(
+          (item: any) => item.id === targetModel.conditionId
+        );
+        label = name;
+      }
+      return {
+        type: "flow-line",
+        label,
+        style: {
+          stroke: "#91d5ff",
+        },
+      };
     });
     // 初始化数据
     graph.data(flowData || data);
