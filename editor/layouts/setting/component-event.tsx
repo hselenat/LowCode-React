@@ -1,132 +1,111 @@
 import {useState, useRef} from "react";
-import {ItemType} from "../../item-type";
-import {useComponents, type Component} from "../../store/components";
+// import { type Component} from "../../store/components";
+import {useComponents} from "../../store/components";
 import {getComponentById} from "../../store/components";
-import {Collapse, Input, Select, TreeSelect, Drawer, Button} from "antd";
+import {Collapse, Drawer, Button} from "antd";
 import FlowEvent from "../flow-event";
-
-export const componentEventMap = {
-  [ItemType.Button]: [
-    {
-      name: "onClick",
-      label: "点击事件",
-    },
-  ],
-};
-
-export const componentMethodMap = {
-  [ItemType.Button]: [
-    {
-      name: "startLoading",
-      label: "开始loading",
-    },
-    {
-      name: "endLoading",
-      label: "结束loading",
-    },
-  ],
-};
+import {componentEventMap} from "./componentEventMap";
+// import { componentMethodMap } from "./componentMethodMap";
 
 const ComponentEvent: React.FC = () => {
   const {curComponentId, updateComponentProps, components} = useComponents();
-  const [selectedComponent, setSelectedComponent] =
-    useState<Component | null>();
+  // const [selectedComponent, setSelectedComponent] = useState<Component | null>();
   const [open, setOpen] = useState(false);
   const [eventName, setEventName] = useState("");
   const curComponent = getComponentById(Number(curComponentId), components);
   const flowEventRef = useRef<any>(null);
 
   // 事件类型改变
-  function typeChange(eventName: string, value: string) {
-    if (!curComponentId) {
-      return;
-    }
-    updateComponentProps(Number(curComponentId), {
-      [eventName]: {
-        type: value,
-      },
-    });
-  }
+  // function typeChange(eventName: string, value: string) {
+  //   if (!curComponentId) {
+  //     return;
+  //   }
+  //   updateComponentProps(Number(curComponentId), {
+  //     [eventName]: {
+  //       type: value,
+  //     },
+  //   });
+  // }
   // 消息类型改变
-  function messageTypeChange(eventName: string, value: string) {
-    if (!curComponentId) {
-      return;
-    }
-    updateComponentProps(Number(curComponentId), {
-      [eventName]: {
-        ...curComponent?.props?.[eventName],
-        config: {
-          ...curComponent?.props?.[eventName]?.config,
-          type: value,
-        },
-      },
-    });
-  }
+  // function messageTypeChange(eventName: string, value: string) {
+  //   if (!curComponentId) {
+  //     return;
+  //   }
+  //   updateComponentProps(Number(curComponentId), {
+  //     [eventName]: {
+  //       ...curComponent?.props?.[eventName],
+  //       config: {
+  //         ...curComponent?.props?.[eventName]?.config,
+  //         type: value,
+  //       },
+  //     },
+  //   });
+  // }
   // 消息文本改变
-  function messageTextChange(eventName: string, value: string) {
-    if (!curComponentId) {
-      return;
-    }
-    updateComponentProps(Number(curComponentId), {
-      [eventName]: {
-        ...curComponent?.props?.[eventName],
-        config: {
-          ...curComponent?.props?.[eventName]?.config,
-          text: value,
-        },
-      },
-    });
-  }
+  // function messageTextChange(eventName: string, value: string) {
+  //   if (!curComponentId) {
+  //     return;
+  //   }
+  //   updateComponentProps(Number(curComponentId), {
+  //     [eventName]: {
+  //       ...curComponent?.props?.[eventName],
+  //       config: {
+  //         ...curComponent?.props?.[eventName]?.config,
+  //         text: value,
+  //       },
+  //     },
+  //   });
+  // }
 
   // 改变选择被触发的组件
-  function componentChange(eventName: string, value: number) {
-    if (!curComponentId) {
-      return;
-    }
-    const component = getComponentById(value, components);
-    setSelectedComponent(component);
-    updateComponentProps(Number(curComponentId), {
-      [eventName]: {
-        ...curComponent?.props?.[eventName],
-        config: {
-          ...curComponent?.props?.[eventName]?.config,
-          componentId: value,
-        },
-      },
-    });
-  }
+  // function componentChange(eventName: string, value: number) {
+  //   if (!curComponentId) {
+  //     return;
+  //   }
+  //   const component = getComponentById(value, components);
+  //   setSelectedComponent(component);
+  //   updateComponentProps(Number(curComponentId), {
+  //     [eventName]: {
+  //       ...curComponent?.props?.[eventName],
+  //       config: {
+  //         ...curComponent?.props?.[eventName]?.config,
+  //         componentId: value,
+  //       },
+  //     },
+  //   });
+  // }
 
   // 组件方法改变
-  function componentMethodChange(eventName: string, value: string) {
-    if (!curComponentId) {
-      return;
-    }
-    updateComponentProps(Number(curComponentId), {
-      [eventName]: {
-        ...curComponent?.props?.[eventName],
-        config: {
-          ...curComponent?.props?.[eventName]?.config,
-          method: value,
-        },
-      },
-    });
-  }
+  // function componentMethodChange(eventName: string, value: string) {
+  //   if (!curComponentId) {
+  //     return;
+  //   }
+  //   updateComponentProps(Number(curComponentId), {
+  //     [eventName]: {
+  //       ...curComponent?.props?.[eventName],
+  //       config: {
+  //         ...curComponent?.props?.[eventName]?.config,
+  //         method: value,
+  //       },
+  //     },
+  //   });
+  // }
 
   // 脚本改变
-  function scriptChange(eventName: string, value: string) {
-    if (!curComponentId) {
-      return;
-    }
-    updateComponentProps(Number(curComponentId), {
-      [eventName]: {
-        ...curComponent?.props?.[eventName],
-        config: {
-          ...curComponent?.props?.[eventName]?.config,
-          script: value,
-        },
-      },
-    });
-  }
+  // function scriptChange(eventName: string, value: string) {
+  //   if (!curComponentId) {
+  //     return;
+  //   }
+  //   updateComponentProps(Number(curComponentId), {
+  //     [eventName]: {
+  //       ...curComponent?.props?.[eventName],
+  //       config: {
+  //         ...curComponent?.props?.[eventName]?.config,
+  //         script: value,
+  //       },
+  //     },
+  //   });
+  // }
 
   if (!curComponent) {
     return null;

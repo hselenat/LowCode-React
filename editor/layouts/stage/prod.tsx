@@ -4,7 +4,7 @@ import Space from "../../components/space";
 import Page from "../../components/page";
 import Button from "../../components/button";
 import {message} from "antd";
-import {componentEventMap} from "../../layouts/setting/component-event";
+import {componentEventMap} from "../../layouts/setting/componentEventMap";
 import {usePageDataStore} from "../../store/page-data";
 import {useVariableStore} from "../../store/variable";
 import {type Node} from "../flow-event/data";
@@ -71,7 +71,7 @@ const ProdStage: React.FC = () => {
         );
         execEventFlow(nodes || []);
       } catch (error) {
-        console.error(`执行脚本失败：${error}`);
+        console.log(`执行脚本失败：${error}`);
         // 执行失败后，执行后续的失败事件
         const nodes = item.children?.filter(
           (o: Node) => o.eventKey === "error"
@@ -100,7 +100,7 @@ const ProdStage: React.FC = () => {
         );
         execEventFlow(nodes || []);
       } catch (error) {
-        console.error(`设置变量${variable}失败：${error}`);
+        console.log(`设置变量${variable}失败：${error}`);
         // 执行失败后，执行后续的失败事件
         const nodes = item.children?.filter(
           (o: Node) => o.eventKey === "error"
@@ -129,7 +129,7 @@ const ProdStage: React.FC = () => {
         );
         execEventFlow(nodes || []);
       } catch (error) {
-        console.error(`调用组件${componentId}的方法${method}失败：${error}`);
+        console.log(`调用组件${componentId}的方法${method}失败：${error}`);
         // 执行失败后，执行后续的失败事件
         const nodes = item.children?.filter(
           (o: Node) => o.eventKey === "error"
@@ -162,7 +162,7 @@ const ProdStage: React.FC = () => {
         );
         execEventFlow(nodes || []);
       } catch (error) {
-        console.error(`显示消息失败：${error}`);
+        console.log(`显示消息失败：${error}`);
         // 执行失败后，执行后续的失败事件
         const nodes = item.children?.filter(
           (o: Node) => o.eventKey === "error"
@@ -303,7 +303,7 @@ const ProdStage: React.FC = () => {
         const eventConfig = component.props[event.name];
         console.log("eventConfig===>", eventConfig);
         if (eventConfig) {
-          const {type, config} = eventConfig;
+          const {config} = eventConfig;
           console.log("config===>", config);
           props[event?.name] = () => {
             // 第一版：（通过if-else的方式处理事件类型） -- 开始
