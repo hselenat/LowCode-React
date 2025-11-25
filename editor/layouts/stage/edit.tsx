@@ -17,10 +17,10 @@ import {loadRemoteComponent} from "../../utils";
 //   )
 // );
 
-const ComponentMap: {[key: string]: React.FC} = {
-  Button: Button as React.FC,
-  Space: Space as React.FC,
-  Page: Page as React.FC,
+const ComponentMap: {[key: string]: any} = {
+  Button: Button,
+  Space: Space,
+  Page: Page,
   RemoteComponent: React.lazy(() =>
     loadRemoteComponent(
       "https://cdn.jsdelivr.net/npm/dbfu-remote-component@1.0.1/dist/bundle.umd.js"
@@ -73,7 +73,7 @@ const EditStage: React.FC = () => {
     });
   }
   // 如果拖拽的组件是可以放置的，canDrop为true，通过这个可以给组件添加边框
-  const [{canDrop}, dropRef] = useDrop({
+  const [, dropRef] = useDrop({
     accept: [ItemType.Button, ItemType.Space, ItemType.RemoteComponent],
     drop: (_, monitor) => {
       const didDrop = monitor.didDrop();

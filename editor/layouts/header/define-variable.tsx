@@ -22,7 +22,7 @@ const DefineVariable: React.FC<Props> = ({open, onCancel}) => {
     if (open) {
       form.setFieldsValue({variables});
     }
-  }, [open]);
+  }, [open, variables, form]);
 
   return (
     <Modal
