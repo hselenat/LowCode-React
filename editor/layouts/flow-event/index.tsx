@@ -159,16 +159,14 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
     };
   }, [flowData]);
 
-  const onSelectHandle = (key: string) => {
+  const onSelectHandle = ({key}: any) => {
     // 获取到需要新增的节点类型
-    const menu = curModelRef.current?.menus?.find(
-      (o: any) => o?.key === key.key
-    );
+    const menu = curModelRef.current?.menus?.find((o: any) => o?.key === key);
     const type = menu?.nodeType;
     const name = menu?.nodeName;
     if (!curModelRef.current) return;
     const id = `n-${Math.random()}`;
-    if (!curModelRef.children) curModelRef.current.children = [];
+    if (!curModelRef.current.children) curModelRef.current.children = [];
     let menus: any = [];
     if (["condition", "action"].includes(type)) {
       menus = [];
