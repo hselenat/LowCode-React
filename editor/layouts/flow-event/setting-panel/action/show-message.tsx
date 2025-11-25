@@ -1,18 +1,32 @@
-import {Form, Input} from "antd";
+import {Form, Input, Select} from "antd";
 
 /**
  * 操作设置面板
  * 提示信息 showMessage
  * @returns
  */
-function ShowMessageSetting({values}: {values: any}) {
-  console.log("showMessage", values);
+function ShowMessageSetting() {
   return (
-    <Form>
-      <Form.Item label="提示信息" name="showMessage">
-        <Input.TextArea />
+    <>
+      <Form.Item label="类型" name={["config", "type"]}>
+        <Select
+          style={{width: 170}}
+          options={[
+            {
+              label: "成功",
+              value: "success",
+            },
+            {
+              label: "错误",
+              value: "error",
+            },
+          ]}
+        />
       </Form.Item>
-    </Form>
+      <Form.Item label="文本" name={["config", "text"]}>
+        <Input style={{width: 170}} />
+      </Form.Item>
+    </>
   );
 }
 

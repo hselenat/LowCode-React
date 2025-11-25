@@ -5,6 +5,7 @@ import ComponentMethodSetting from "./component-method";
 import SetVariableSetting from "./set-variable";
 import ExecScriptSetting from "./exec-script";
 import AsyncTaskSetting from "./async-task";
+import {useUpdateEffect} from "ahooks";
 
 /**
  * 操作设置面板
@@ -40,8 +41,61 @@ function ActionSettingPanel(
   const valueChange = (_: any, allValues: any) => {
     setValues(allValues);
   };
+
+  useUpdateEffect(() => {
+    form.setFieldsValue({
+      config: null,
+    });
+  }, [values.type, form]);
+
+  useImperativeHandle(ref, () => {
+    return {
+      save: () => {
+        form.submit();
+      },
+    };
+  });
+
+  function save(config: any) {
+    graphRef.current.updateItem(curModelRef.current.id, {
+      ...curModelRef.current,
+      config,
+      label: EventActionTypeDesc[values.type],
+      menus: [
+        {
+          label: "成功",
+          key: "success",
+          nodeType: "event",
+          nodeName: "成功",
+          eventKey: "success",
+        },
+        {
+          label: "失败",
+          key: "error",
+          nodeType: "event",
+          nodeName: "失败",
+          eventKey: "error",
+        },
+        {
+          label: "成功或失败",
+          key: "finally",
+          nodeType: "event",
+          nodeName: "成功或失败",
+          eventKey: "finally",
+        },
+      ],
+    });
+    setSettingOpen(false);
+  }
   return (
-    <Form form={form} initialValues={values} onValuesChange={valueChange}>
+    <Form
+      form={form}
+      labelCol={{span: 8}}
+      wrapperCol={{span: 16}}
+      initialValues={curModelRef.current?.config}
+      onValuesChange={valueChange}
+      onFinish={save}
+    >
       <Form.Item label="动作类型" name="type">
         <Select
           options={[

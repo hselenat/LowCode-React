@@ -5,14 +5,19 @@ import {Form, Input} from "antd";
  * 执行脚本 execScript
  * @returns
  */
-function ExecScriptSetting({values}: {values: any}) {
-  console.log("execScript", values);
+function ExecScriptSetting() {
   return (
-    <Form>
-      <Form.Item label="执行脚本" name="execScript">
-        <Input.TextArea />
+    <>
+      <Form.Item label="脚本" name={["config", "script"]}>
+        <Input.TextArea
+          style={{width: 210}}
+          rows={10}
+          defaultValue={`(function (ctx) {
+          // TODO
+          })(ctx)`}
+        />
       </Form.Item>
-    </Form>
+    </>
   );
 }
 

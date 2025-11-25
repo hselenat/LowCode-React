@@ -1,4 +1,5 @@
-import {Form, Input} from "antd";
+import {Form, Input, Select} from "antd";
+import {useVariableStore} from "../../../../store/variable";
 
 /**
  * 操作设置面板
@@ -6,13 +7,24 @@ import {Form, Input} from "antd";
  * @returns
  */
 function SetVariableSetting({values}: {values: any}) {
-  console.log("setVariable", values);
+  const {variables} = useVariableStore();
   return (
-    <Form>
-      <Form.Item label="设置变量" name="setVariable">
-        <Input.TextArea />
+    <>
+      <Form.Item label="变量" name={["config", "variable"]}>
+        <Select
+          style={{width: 170}}
+          options={variables.map((variable) => ({
+            label: variable.remark,
+            value: variable.name,
+          }))}
+        />
       </Form.Item>
-    </Form>
+      {values.config.variable && (
+        <Form.Item label="值" name={["config", "value"]}>
+          <Input style={{width: 170}} />
+        </Form.Item>
+      )}
+    </>
   );
 }
 
