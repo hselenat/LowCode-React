@@ -132,7 +132,16 @@ const ComponentEvent: React.FC = () => {
     return null;
   }
 
-  function save() {}
+  function save() {
+    if (!curComponentId) {
+      return;
+    }
+    const value = flowEventRef.current?.save();
+    updateComponentProps(Number(curComponentId), {
+      [eventName]: value,
+    });
+    setOpen(false);
+  }
 
   return (
     <div className="w-[250px]">
@@ -143,7 +152,7 @@ const ComponentEvent: React.FC = () => {
             defaultActiveKey={setting.name}
             items={[
               {
-                header: setting.label,
+                label: setting.label,
                 key: setting.name,
                 children: (
                   <Button
@@ -168,7 +177,7 @@ const ComponentEvent: React.FC = () => {
         width="100vw"
         onClose={() => setOpen(false)}
         extra={
-          <Button type="primary" onClick={() => save}>
+          <Button type="primary" onClick={() => save()}>
             保存
           </Button>
         }

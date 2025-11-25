@@ -1,4 +1,10 @@
-import React, {forwardRef, useRef, useState, useEffect} from "react";
+import React, {
+  forwardRef,
+  useRef,
+  useState,
+  useEffect,
+  useImperativeHandle,
+} from "react";
 import {Drawer, Button} from "antd";
 import G6 from "@antv/g6";
 import defaultLayout from "./default-layout";
@@ -29,6 +35,8 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
   const settingRef = useRef<any>(null); // 保存当前选中的节点
 
   useEffect(() => {
+    // 初始化画布
+    if (!containerRef.current) return;
     const {width} = containerRef.current?.getBoundingClientRect() || {};
     const depth = getTreeDepth(flowData || data);
     const graph = new G6.TreeGraph({
@@ -52,7 +60,7 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
       graph.changeSize(width, depth * 40 + 56 * (depth - 1) + 200);
     });
     // 删除节点后，更新画布
-    graph.on("afterremoveitem", (evt: any) => {
+    graph.on("afterremoveitem", () => {
       const newData = graph.save();
       const depth = getTreeDepth(newData);
       graph.changeSize(width, depth * 40 + 56 * (depth - 1) + 200);
@@ -149,7 +157,7 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
       }
       //   console.log("item===>", item);
     });
-    graph.on("canvas:click", (evt: any) => {
+    graph.on("canvas:click", () => {
       setMenuOpen(false);
       curModelRef.current = null;
     });
@@ -203,6 +211,18 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
     setMenuOpen(false);
     curModelRef.current = null;
   };
+
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        save: () => {
+          return graphRef.current?.save();
+        },
+      };
+    },
+    [graphRef]
+  );
 
   function saveSetting() {
     settingRef.current?.save();

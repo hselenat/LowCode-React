@@ -17,7 +17,7 @@ const componentMethodMap = {
       label: "开始加载",
     },
     {
-      name: "stopLoading",
+      name: "endLoading",
       label: "结束加载",
     },
   ],

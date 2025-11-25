@@ -48,13 +48,17 @@ function ActionSettingPanel(
     });
   }, [values.type, form]);
 
-  useImperativeHandle(ref, () => {
-    return {
-      save: () => {
-        form.submit();
-      },
-    };
-  });
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        save: () => {
+          form.submit();
+        },
+      };
+    },
+    [form]
+  );
 
   function save(config: any) {
     graphRef.current.updateItem(curModelRef.current.id, {

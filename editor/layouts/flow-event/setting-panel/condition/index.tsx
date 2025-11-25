@@ -13,26 +13,32 @@ function ConditionSettingPanel(
     `(function(ctx){ \n\n})(ctx)`
   );
 
-  useImperativeHandle(ref, () => {
-    return {
-      save: () => {
-        graphRef.current?.updateItem(curModelRef.current.id, {
-          ...curModelRef.current,
-          config: data,
-          menus: data.map((item: any) => {
-            return {
-              key: item.id,
-              label: item.name,
-              nodeType: "action",
-              nodeName: "动作",
-              conditionId: item.id,
-            };
-          }),
-        });
-        setSettingOpen(false);
-      },
-    };
-  });
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        save: () => {
+          graphRef.current?.updateItem(curModelRef.current.id, {
+            ...curModelRef.current,
+            config: data,
+            menus: data.map((item: any) => {
+              return {
+                key: item.id,
+                label: item.name,
+                nodeType: "action",
+                nodeName: "动作",
+                conditionId: item.id,
+              };
+            }),
+          });
+          if (setSettingOpen) {
+            setSettingOpen(false);
+          }
+        },
+      };
+    },
+    [data, graphRef, curModelRef, setSettingOpen]
+  );
 
   function nameChange(value: any, index: number) {
     setData((prev: any) => {
