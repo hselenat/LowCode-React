@@ -37,7 +37,7 @@ export const actionNode: any = {
     group.addShape("marker", {
       attrs: {
         x: w / 2 - 20,
-        y: 0,
+        y: 6,
         r: 6,
         stroke: "#ff4d4f",
         cursor: "pointer",
