@@ -233,7 +233,7 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
         width={300}
         onClose={() => setSettingOpen(false)}
         extra={<Button onClick={() => saveSetting()}>确定</Button>}
-        destoryOnHidden={true}
+        destroyOnHidden={true}
       >
         {(settingMap[curModelRef.current?.type] &&
           React.createElement(settingMap[curModelRef.current?.type], {
