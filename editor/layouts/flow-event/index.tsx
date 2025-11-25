@@ -69,10 +69,19 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
       let label = "";
       // 如果是条件节点
       if (sourceModel?.type === "condition") {
-        const {name} = sourceModel?.config?.find(
-          (item: any) => item.id === targetModel.conditionId
-        );
-        label = name;
+        const sourceConfig = sourceModel?.config as
+          | Array<{id: string; name: string}>
+          | undefined;
+        if (sourceConfig) {
+          const foundItem = sourceConfig.find(
+            (item: {id: string; name: string}) =>
+              item.id === targetModel.conditionId
+          );
+          if (foundItem) {
+            const {name} = foundItem;
+            label = name;
+          }
+        }
       }
       return {
         type: "flow-line",
