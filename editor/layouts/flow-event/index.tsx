@@ -57,7 +57,7 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
       const depth = getTreeDepth(newData);
       graph.changeSize(width, depth * 40 + 56 * (depth - 1) + 200);
     });
-    // 自定义线的类型
+    // 自定义线的类型：在连接线上，渲染出对应的条件名称
     graph.edge((config: any) => {
       // 获取线的源节点和目标节点
       const sourceNode = graph.findById(config.source);
@@ -177,14 +177,14 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
           label: "动作",
           nodeType: "action",
           nodeName: "动作",
-          eventKey: menu.eventKey,
+          eventKey: "action", // menu.eventKey,
         },
         {
           key: "condition",
           label: "条件",
           nodeType: "condition",
           nodeName: "条件",
-          eventKey: menu.eventKey,
+          eventKey: "condition", // menu.eventKey,
         },
       ];
     }
@@ -222,7 +222,7 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
       <ContextMenu
         position={position}
         onSelect={onSelectHandle}
-        items={curModelRef.current?.menus || data.menus}
+        items={curModelRef.current?.menus || []} // data.menus
         open={menuOpen}
       />
 
