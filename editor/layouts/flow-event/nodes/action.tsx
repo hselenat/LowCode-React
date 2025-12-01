@@ -2,13 +2,11 @@ import {COLLAPSE_ICON, EXPAND_ICON} from "../icons";
 
 export const actionNode: any = {
   options: {
-    size: [120, 40],
     style: {
       fill: "#F9F0FF",
+      stroke: "#B37FEB",
       radius: 8,
       lineWidth: 1,
-      stroke: "#B#7FEB",
-      fillOpacity: "0.95",
     },
     stateStyles: {
       hover: {},
@@ -16,28 +14,31 @@ export const actionNode: any = {
     },
     labelCfg: {
       style: {
-        fill: "#0000000",
+        fill: "#000000",
         fontSize: 14,
         fontWeight: 400,
         fillOpacity: "0.7",
       },
     },
+    size: [120, 40],
   },
   drawShape(cfg: any, group: any) {
     const styles = this.getShapeStyle(cfg);
     const h = styles.height;
     const w = styles.width;
-    const keyShape = group.addShape("rect", {
+
+    const keyShape: any = group.addShape("rect", {
       attrs: {
         x: 0,
         y: 0,
         ...styles,
       },
     });
+
     group.addShape("marker", {
       attrs: {
         x: w / 2 - 20,
-        y: 6,
+        y: 0,
         r: 6,
         stroke: "#ff4d4f",
         cursor: "pointer",
@@ -75,9 +76,7 @@ export const actionNode: any = {
     });
     // 更新后的文案内容
     if (text) {
-      text.attr({
-        text: cfg.text || "",
-      });
+      text.attr({text: cfg.label});
     }
     if (!child && cfg.menus?.length) {
       group.addShape("marker", {
