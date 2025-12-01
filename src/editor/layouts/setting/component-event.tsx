@@ -4,12 +4,14 @@ import {useComponents} from "../../store/components";
 import {getComponentById} from "../../store/components";
 import {Collapse, Drawer, Button} from "antd";
 import FlowEvent from "../flow-event";
-import {componentEventMap} from "./componentEventMap";
+// import {componentEventMap} from "./componentEventMap";
 // import { componentMethodMap } from "./componentMethodMap";
+import {useComponentConfigStore} from "../../store/component-config";
 
 const ComponentEvent: React.FC = () => {
   const {curComponentId, updateComponentProps, components} = useComponents();
   // const [selectedComponent, setSelectedComponent] = useState<Component | null>();
+  const {componentConfig} = useComponentConfigStore();
   const [open, setOpen] = useState(false);
   const [eventName, setEventName] = useState("");
   const curComponent = getComponentById(Number(curComponentId), components);
@@ -124,7 +126,7 @@ const ComponentEvent: React.FC = () => {
 
   return (
     <div className="w-[250px]">
-      {(componentEventMap[curComponent?.name] || []).map((setting) => {
+      {(componentConfig[curComponent?.name]?.events || []).map((setting) => {
         return (
           <Collapse
             key={setting.name}

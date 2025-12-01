@@ -4,10 +4,11 @@ import Space from "../../components/space";
 import Page from "../../components/page";
 import Button from "../../components/button";
 import {message} from "antd";
-import {componentEventMap} from "../../layouts/setting/componentEventMap";
+// import {componentEventMap} from "../../layouts/setting/componentEventMap";
 import {usePageDataStore} from "../../store/page-data";
 import {useVariableStore} from "../../store/variable";
 import {type Node} from "../flow-event/data";
+import {useComponentConfigStore} from "../../store/component-config";
 
 const ComponentMap: {[key: string]: any} = {
   Button: Button,
@@ -20,6 +21,7 @@ const ProdStage: React.FC = () => {
   const componentRefs = useRef<any>({});
   const {variables} = useVariableStore();
   const {data, setData} = usePageDataStore();
+  const {componentConfig} = useComponentConfigStore();
   //   function formatProps(component: Component) {
   //     const props = Object.keys(component.props || {}).reduce<any>(
   //       (prev, cur) => {
@@ -264,7 +266,7 @@ const ProdStage: React.FC = () => {
   }
 
   // 执行事件流
-  function execEventFlow(nodes: Node[] = []) {
+  function execEventFlow(nodes: Node[] = [], params?: any) {
     if (nodes.length === 0) {
       return;
     }
@@ -272,7 +274,11 @@ const ProdStage: React.FC = () => {
       // 判断是否是动作节点，如果是动作节点并且条件结果不为false，则执行动作
       if (item.type === "action" && item.conditionResult !== false) {
         // 根据不同动作类型执行不同动作
-        await eventHandleMap[item.config.type](item, item.config.config);
+        await eventHandleMap[item.config.type](
+          item,
+          item.config.config,
+          params
+        );
       } else if (item.type === "condition") {
         // 如果是条件节点，则执行条件脚本，把结果注入到子节点conditionResult属性中
         const conditionResult = (item.config || [])
@@ -288,57 +294,72 @@ const ProdStage: React.FC = () => {
             child.conditionResult = !!conditionResult[child.conditionId];
           });
         // 递归执行子节点事件流
-        execEventFlow(item.children || []);
+        execEventFlow(item.children || [], params);
       } else if (item.type === "event") {
         // 如果是事件节点，则执行事件子节点事件流
-        execEventFlow(item.children || []);
+        execEventFlow(item.children || [], params);
       }
     });
   }
 
   function handleEvent(component: Component) {
     const props: any = {};
-    if (componentEventMap[component.name]?.length) {
-      componentEventMap[component.name]?.forEach((event) => {
-        const eventConfig = component.props[event.name];
-        console.log("eventConfig===>", eventConfig);
-        if (eventConfig) {
-          const {config} = eventConfig;
-          console.log("config===>", config);
-          props[event?.name] = () => {
-            // 第一版：（通过if-else的方式处理事件类型） -- 开始
-            // 如果动作类型是显示消息，下面根据消息类型调用显示的方法
-            // if (type === "showMessage") {
-            //   if (config?.type === "success") {
-            //     message.success(config?.text || "");
-            //     alert(config?.text || "");
-            //   } else if (config?.type === "error") {
-            //     message.error(config?.text || "");
-            //   } else {
-            //     message.info(config?.text || "");
-            //   }
-            // } else if (type === "componentFunction") {
-            //   const component =
-            //     componentRefs.current[Number(config?.componentId)];
-            //   console.log("config===>componentFunction", config, component);
-            //   if (component) {
-            //     component[config?.method]?.();
-            //   }
-            // } else if (type === "setVariable") {
-            //   const {variableName, value} = config;
-            //   setData(variableName, value);
-            // } else if (type === "execScript") {
-            //   execScript(config.script);
-            // }
-            // 第一版 -- 结束
-            // 优化处理：执行事件流处理
-            if (eventConfig.children) {
-              execEventFlow(eventConfig.children);
-            }
-          };
-        }
-      });
+    const events = componentConfig[component.name]?.events || [];
+    if (!events.length) {
+      return props;
     }
+    events.forEach((event: any) => {
+      const eventConfig = component.props[event.name];
+      if (eventConfig) {
+        props[event.name] = (params: any) => {
+          // 执行事件流
+          if (eventConfig.children) {
+            execEventFlow(eventConfig.children, params);
+          }
+        };
+      }
+    });
+    // if (componentEventMap[component.name]?.length) {
+    //   componentEventMap[component.name]?.forEach((event) => {
+    //     const eventConfig = component.props[event.name];
+    //     console.log("eventConfig===>", eventConfig);
+    //     if (eventConfig) {
+    //       const {config} = eventConfig;
+    //       console.log("config===>", config);
+    //       props[event?.name] = () => {
+    //         // 第一版：（通过if-else的方式处理事件类型） -- 开始
+    //         // 如果动作类型是显示消息，下面根据消息类型调用显示的方法
+    //         // if (type === "showMessage") {
+    //         //   if (config?.type === "success") {
+    //         //     message.success(config?.text || "");
+    //         //     alert(config?.text || "");
+    //         //   } else if (config?.type === "error") {
+    //         //     message.error(config?.text || "");
+    //         //   } else {
+    //         //     message.info(config?.text || "");
+    //         //   }
+    //         // } else if (type === "componentFunction") {
+    //         //   const component =
+    //         //     componentRefs.current[Number(config?.componentId)];
+    //         //   console.log("config===>componentFunction", config, component);
+    //         //   if (component) {
+    //         //     component[config?.method]?.();
+    //         //   }
+    //         // } else if (type === "setVariable") {
+    //         //   const {variableName, value} = config;
+    //         //   setData(variableName, value);
+    //         // } else if (type === "execScript") {
+    //         //   execScript(config.script);
+    //         // }
+    //         // 第一版 -- 结束
+    //         // 优化处理：执行事件流处理
+    //         if (eventConfig.children) {
+    //           execEventFlow(eventConfig.children);
+    //         }
+    //       };
+    //     }
+    //   });
+    // }
     return props;
   }
 

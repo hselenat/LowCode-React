@@ -33,6 +33,10 @@ export interface ComponentEvent {
    * 事件描述
    */
   desc: string;
+  /**
+   * 事件标签
+   */
+  label?: string;
 }
 
 /**
@@ -80,23 +84,23 @@ export interface ComponentConfig {
   /**
    * 编辑模式下加载的组件
    */
-  dev: React.FC;
+  dev: any; // React.FC;
   /**
    * 生产模式下加载的组件
    */
-  prod: React.FC;
+  prod: any; // React.FC;
   /**
    * 组件属性配置
    */
-  setter: ComponentSetter[];
+  setter?: ComponentSetter[];
   /**
    * 组件方法
    */
-  methods: ComponentMethod[];
+  methods?: ComponentMethod[];
   /**
    * 组件事件
    */
-  events: ComponentEvent[];
+  events?: ComponentEvent[];
   /**
    * 组件排序
    */

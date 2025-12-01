@@ -1,63 +1,64 @@
 import {Form, Select} from "antd";
 import {useEffect, useMemo} from "react";
-import {ItemType} from "../../item-type";
+// import {ItemType} from "../../item-type";
 import {useComponents, getComponentById} from "../../store/components";
 import SettingFormItemInput from "../../common/setting-form-item/input";
+import {useComponentConfigStore} from "../../store/component-config";
 
-const componentSettingMap = {
-  [ItemType.Button]: [
-    {
-      name: "type",
-      label: "按钮类型",
-      type: "select",
-      defaultValue: "primary",
-      options: [
-        {
-          label: "普通按钮",
-          value: "primary",
-        },
-        {
-          label: "默认按钮",
-          value: "default",
-        },
-      ],
-    },
-    {
-      name: "text",
-      label: "按钮文本",
-      type: "input",
-    },
-  ],
-  [ItemType.Space]: [
-    {
-      name: "size",
-      label: "间距大小",
-      type: "select",
-      defaultValue: "middle",
-      options: [
-        {
-          label: "小",
-          value: "small",
-        },
-        {
-          label: "中",
-          value: "middle",
-        },
-        {
-          label: "大",
-          value: "large",
-        },
-      ],
-    },
-  ],
-  [ItemType.Page]: [
-    {
-      name: "title",
-      label: "页面标题",
-      type: "input",
-    },
-  ],
-};
+// const componentSettingMap = {
+//   [ItemType.Button]: [
+//     {
+//       name: "type",
+//       label: "按钮类型",
+//       type: "select",
+//       defaultValue: "primary",
+//       options: [
+//         {
+//           label: "普通按钮",
+//           value: "primary",
+//         },
+//         {
+//           label: "默认按钮",
+//           value: "default",
+//         },
+//       ],
+//     },
+//     {
+//       name: "text",
+//       label: "按钮文本",
+//       type: "input",
+//     },
+//   ],
+//   [ItemType.Space]: [
+//     {
+//       name: "size",
+//       label: "间距大小",
+//       type: "select",
+//       defaultValue: "middle",
+//       options: [
+//         {
+//           label: "小",
+//           value: "small",
+//         },
+//         {
+//           label: "中",
+//           value: "middle",
+//         },
+//         {
+//           label: "大",
+//           value: "large",
+//         },
+//       ],
+//     },
+//   ],
+//   [ItemType.Page]: [
+//     {
+//       name: "title",
+//       label: "页面标题",
+//       type: "input",
+//     },
+//   ],
+// };
 
 const ComponentAttr: React.FC = () => {
   const {components, curComponentId, updateComponentProps} = useComponents();
@@ -65,6 +66,7 @@ const ComponentAttr: React.FC = () => {
   const curComponent = useMemo(() => {
     return getComponentById(Number(curComponentId), components);
   }, [curComponentId]);
+  const {componentConfig} = useComponentConfigStore();
 
   const [form] = Form.useForm();
 
@@ -93,16 +95,18 @@ const ComponentAttr: React.FC = () => {
   if (!curComponent) return null;
   return (
     <Form form={form} onValuesChange={onValueChange}>
-      {componentSettingMap[curComponent.name]?.map((setting: any) => (
-        <Form.Item
-          name={setting.name}
-          label={setting.label}
-          initialValue={setting.defaultValue}
-          key={setting.name}
-        >
-          {renderFormElement(setting)}
-        </Form.Item>
-      ))}
+      {(componentConfig[curComponent.name]?.setter || []).map(
+        (setting: any) => (
+          <Form.Item
+            name={setting.name}
+            label={setting.label}
+            initialValue={setting.defaultValue}
+            key={setting.name}
+          >
+            {renderFormElement(setting)}
+          </Form.Item>
+        )
+      )}
     </Form>
   );
 };
