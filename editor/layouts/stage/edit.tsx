@@ -31,7 +31,6 @@ const ComponentMap: {[key: string]: any} = {
 const EditStage: React.FC = () => {
   const {components, setCurComponentId, curComponentId} = useComponents();
   const selectedMaskRef = useRef<any>(null);
-  const hoverMaskRef = useRef<any>(null);
   const [hoverComponentId, setHoverComponentId] = useState<number | null>(null);
   console.log("components", components);
   function formatProps(component: Component) {
@@ -53,8 +52,9 @@ const EditStage: React.FC = () => {
     );
     return props;
   }
-  function renderComponent(components: Component[]): React.ReactNode {
-    return components.map((component) => {
+
+  function renderComponents(components: Component[]): React.ReactNode {
+    return components.map((component: Component) => {
       if (!ComponentMap[component.name]) return null;
       const props = formatProps(component);
       if (ComponentMap[component.name]) {
@@ -67,13 +67,15 @@ const EditStage: React.FC = () => {
             ...component.props,
             ...props,
           },
-          component.props.children || renderComponent(component.children || [])
+          component.props.children || renderComponents(component.children || [])
         );
       }
+      return null;
     });
   }
   // 如果拖拽的组件是可以放置的，canDrop为true，通过这个可以给组件添加边框
   const [, dropRef] = useDrop({
+    // 可以接受的元素类型
     accept: [ItemType.Button, ItemType.Space, ItemType.RemoteComponent],
     drop: (_, monitor) => {
       const didDrop = monitor.didDrop();
@@ -111,7 +113,7 @@ const EditStage: React.FC = () => {
     return () => {
       container?.removeEventListener("click", createMask, true);
     };
-  }, [setCurComponentId]);
+  }, [curComponentId, setCurComponentId]);
 
   // 添加hover事件，处理hover组件逻辑
   useEffect(() => {
@@ -121,17 +123,15 @@ const EditStage: React.FC = () => {
       for (let i = 0; i < path.length; i++) {
         const ele = path[i]; // 拿到点击元素
         // 如果有自定义属性
-        if (ele.getAttribute) {
-          if (ele.getAttribute("data-component-id")) {
-            const componentId = ele.getAttribute("data-component-id");
-            if (curComponentId === componentId) {
-              setHoverComponentId(null);
-            } else {
-              setHoverComponentId(Number(componentId));
-            }
-            console.log("hover的hoverComponentId", hoverComponentId);
-            return;
+        if (ele.getAttribute && ele.getAttribute("data-component-id")) {
+          const componentId = ele.getAttribute("data-component-id");
+          if (curComponentId === componentId) {
+            setHoverComponentId(null);
+          } else {
+            setHoverComponentId(componentId);
           }
+          console.log("hover的hoverComponentId", hoverComponentId);
+          return;
         }
       }
     }
@@ -149,7 +149,7 @@ const EditStage: React.FC = () => {
       container?.removeEventListener("mouseover", createHover, true);
       container?.removeEventListener("mouseout", removeHover);
     };
-  }, [curComponentId, hoverComponentId]);
+  }, [curComponentId, hoverComponentId, setHoverComponentId]);
 
   // 画布的组件更新后，重新渲染遮罩
   useEffect(() => {
@@ -161,7 +161,7 @@ const EditStage: React.FC = () => {
       ref={dropRef as unknown as React.Ref<HTMLDivElement>}
       className="stage flex-1 h-[100vh]"
     >
-      {renderComponent(components)}
+      {renderComponents(components)}
       {curComponentId && (
         <SelectedMask
           ref={selectedMaskRef}
@@ -172,7 +172,7 @@ const EditStage: React.FC = () => {
       )}
       {hoverComponentId && (
         <HoverMask
-          ref={hoverMaskRef}
+          ref={selectedMaskRef}
           componentId={hoverComponentId}
           containerClassName="select-mask-container"
           offsetContainerClassName="stage"

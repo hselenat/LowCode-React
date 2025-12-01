@@ -9,7 +9,7 @@ interface Props {
   /** 当前组件的子节点 */
   children?: any;
   /** 间距大小 */
-  size?: "large" | "middle" | "small";
+  size?: "small" | "middle" | "large";
 }
 
 const Space: React.FC<Props> = (props) => {
@@ -36,7 +36,7 @@ const Space: React.FC<Props> = (props) => {
         ref={dropRef as unknown as React.Ref<HTMLDivElement>}
         className="p-[16px]"
         style={{
-          border: canDrop ? "1px solid #ccc" : "none",
+          border: canDrop ? "1px solid blue" : "none",
         }}
       >
         暂无内容
@@ -49,7 +49,7 @@ const Space: React.FC<Props> = (props) => {
       ref={dropRef as unknown as React.Ref<HTMLDivElement>}
       className="p-[16px]"
       style={{
-        border: canDrop ? "1px solid #ccc" : "none",
+        border: canDrop ? "1px solid blue" : "none",
       }}
     >
       {children}

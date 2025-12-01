@@ -1,7 +1,14 @@
 import {Dropdown, Space} from "antd";
-import {useState, forwardRef, useEffect, useMemo} from "react";
+import {
+  useState,
+  forwardRef,
+  useImperativeHandle,
+  useEffect,
+  useMemo,
+} from "react";
 import {createPortal} from "react-dom";
-import {getComponentById, useComponents} from "../store/components";
+import {useComponents} from "../store/components";
+import {getComponentById} from "../utils";
 
 interface Props {
   /** hover中的组件id */
@@ -25,6 +32,11 @@ const HoverMask = (props: Props, ref: any) => {
   });
   const {components, setCurComponentId} = useComponents();
 
+  // 对外暴露更新位置方法
+  useImperativeHandle(ref, () => ({
+    updatePosition,
+  }));
+
   useEffect(() => {
     updatePosition();
   }, [componentId]);
@@ -43,7 +55,7 @@ const HoverMask = (props: Props, ref: any) => {
       container.getBoundingClientRect();
     // 计算工具栏的位置
     let toolsTop = top - containerTop + container.scrollTop; // 需要加上滚动条的偏移量
-    let toolsLeft = left - containerLeft + width / 2; // 需要加上组件的宽度
+    let toolsLeft = left - containerLeft + width; // 需要加上组件的宽度
     if (toolsTop <= 0) {
       // 工具栏超出顶部，需要调整位置
       toolsTop -= -30;
@@ -69,79 +81,72 @@ const HoverMask = (props: Props, ref: any) => {
     let component = getComponentById(componentId, components);
     while (component?.parentId) {
       component = getComponentById(component.parentId, components);
-      if (component) {
-        parentComponents.push(component);
-      }
+      parentComponents.push(component);
     }
     return parentComponents;
-  }, [curComponent, componentId]);
+  }, [curComponent]);
 
-  return (
+  return createPortal(
     <>
-      {createPortal(
-        <div
-          style={{
-            position: "absolute",
-            top: position.top,
-            left: position.left,
-            width: position.width,
-            height: position.height,
-            border: "1px dashed rgba(66,133,244)",
-            pointerEvents: "none",
-            zIndex: 10,
-            borderRadius: 4,
-            boxSizing: "border-box",
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              top: position.toolsTop,
-              left: position.toolsLeft,
-              fontSize: "14px",
-              color: "red",
-              zIndex: 11,
-              display:
-                !position.width || position.width < 10 ? "none" : "inline",
-              transform: "translate(-100%, -100)",
+      <div
+        style={{
+          position: "absolute",
+          left: position.left,
+          top: position.top,
+          backgroundColor: "rgba(66, 133, 244, 0.04)",
+          border: "1px dashed rgb(66, 133, 244)",
+          pointerEvents: "none",
+          width: position.width,
+          height: position.height,
+          zIndex: 12,
+          borderRadius: 4,
+          boxSizing: "border-box",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          left: position.toolsLeft,
+          top: position.toolsTop,
+          fontSize: "14px",
+          color: "#ff4d4f",
+          zIndex: 13,
+          display: !position.width || position.width < 10 ? "none" : "inline",
+          transform: "translate(-100%, -100%)",
+        }}
+      >
+        <Space>
+          <Dropdown
+            menu={{
+              items: parentComponents.map((item) => ({
+                key: item?.id || "",
+                label: item?.name,
+              })),
+              onClick: ({key}) => {
+                setCurComponentId(Number(key));
+              },
             }}
+            placement="bottomRight"
+            disabled={parentComponents.length === 0}
+            getPopupContainer={(node) => node.parentElement!}
           >
-            <Space>
-              <Dropdown
-                menu={{
-                  items: parentComponents.map((component) => ({
-                    label: component.name,
-                    key: component.id,
-                  })),
-                  onClick: ({key}) => {
-                    setCurComponentId(Number(key));
-                  },
-                }}
-                placement="bottomLeft"
-                disabled={parentComponents.length === 0}
-                getPopupContainer={(node: {parentElement: any}) =>
-                  node.parentElement
-                }
-              ></Dropdown>
-              <div
-                style={{
-                  padding: "0 8px",
-                  backgroundColor: "blue",
-                  border: "1px solid rgba(66,133,244)",
-                  borderRadius: 4,
-                  color: "#fff",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {curComponent?.name}
-              </div>
-            </Space>
-          </div>
-        </div>,
-        document.querySelector(`.${containerClassName}`)
-      )}
-    </>
+            <div
+              style={{
+                padding: "0 8px",
+                backgroundColor: "#1890ff",
+                borderRadius: 4,
+                color: "#fff",
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {curComponent?.name}
+            </div>
+          </Dropdown>
+        </Space>
+      </div>
+    </>,
+    document.querySelector(`.${containerClassName}`)!
   );
 };
 

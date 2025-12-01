@@ -3,7 +3,9 @@ import {useDrop} from "react-dnd";
 import {ItemType} from "../item-type";
 
 interface Props {
+  /** 当前组件的子节点 */
   children: React.ReactNode;
+  /** 当前组件的id */
   id: number;
 }
 
@@ -13,7 +15,7 @@ const Page: React.FC<Props> = ({children, id}) => {
     drop: (_, monitor) => {
       const didDrop = monitor.didDrop();
       if (didDrop) return;
-      // 这里把组件的id返回，在拖拽结束时间里可以拿到这个id
+      // 这里把当前组件的id返回出去，在拖拽结束事件里可以拿到这个id。
       return {id};
     },
     collect: (monitor) => ({
