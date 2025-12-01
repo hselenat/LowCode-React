@@ -6,11 +6,8 @@ interface Props {
     top: number;
     left: number;
   };
-  onSelect: (item: string) => void;
-  items: {
-    label: string;
-    key: string;
-  }[];
+  onSelect: (item: any) => void;
+  items: {label: string; key: string}[];
   open: boolean;
 }
 

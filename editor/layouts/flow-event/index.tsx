@@ -252,17 +252,16 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
         zIndex={1005}
         width={300}
         onClose={() => setSettingOpen(false)}
-        extra={<Button onClick={() => saveSetting()}>确定</Button>}
+        extra={<Button onClick={saveSetting}>确定</Button>}
         destroyOnHidden={true}
       >
-        {(settingMap[curModelRef.current?.type] &&
+        {settingMap[curModelRef.current?.type] &&
           React.createElement(settingMap[curModelRef.current?.type], {
             graphRef,
             curModelRef,
             setSettingOpen,
             ref: settingRef,
-          })) ||
-          null}
+          })}
       </Drawer>
     </div>
   );
