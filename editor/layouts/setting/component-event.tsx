@@ -107,10 +107,6 @@ const ComponentEvent: React.FC = () => {
   //   });
   // }
 
-  if (!curComponent) {
-    return null;
-  }
-
   function save() {
     if (!curComponentId) {
       return;
@@ -120,6 +116,10 @@ const ComponentEvent: React.FC = () => {
       [eventName]: value,
     });
     setOpen(false);
+  }
+
+  if (!curComponent) {
+    return null;
   }
 
   return (
@@ -156,7 +156,7 @@ const ComponentEvent: React.FC = () => {
         width="100vw"
         onClose={() => setOpen(false)}
         extra={
-          <Button type="primary" onClick={() => save()}>
+          <Button type="primary" onClick={save}>
             保存
           </Button>
         }
