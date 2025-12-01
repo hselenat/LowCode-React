@@ -12,13 +12,13 @@ interface Props {
   /** 当前组件的文本内容 */
   text?: string;
   /** 当前组件的按钮类型 */
-  type?: "primary" | "default";
+  type?: "default" | "primary" | "link" | "text";
   /** 当前组件的点击事件 */
   onClick?: () => void;
 }
 
 const Button = (props: Props, ref: any) => {
-  const {id, children, text, type = "primary", onClick} = props;
+  const {id, children, text, type = "default", onClick} = props;
   const [loading, setLoading] = useState(false);
   // 暴露方法：父组件可以使用ref获取组件里暴露出去的方法
   useImperativeHandle(ref, () => {
@@ -54,7 +54,7 @@ const Button = (props: Props, ref: any) => {
       ref={dropRef as unknown as React.Ref<HTMLButtonElement>}
       className="p-[16px]"
       style={{
-        border: canDrop ? "1px solid blue" : "1px solid #ccc",
+        border: canDrop ? "1px solid blue" : "1px solid #d9d9d9'",
       }}
       loading={loading}
     >

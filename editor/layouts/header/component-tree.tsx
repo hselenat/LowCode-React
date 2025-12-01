@@ -7,9 +7,9 @@ interface ComponentTreeProps {
 }
 
 const ComponentTree = ({open, onCancel}: ComponentTreeProps) => {
-  const {components, setCurComponentId, curComponentId} = useComponents();
+  const {components, setCurComponentId} = useComponents();
   // 选择组件后，高亮当前选择的的组件，并关闭弹窗
-  function componentSelect([selectedKey]: any) {
+  function componentSelect([selectedKey]: any[]) {
     setCurComponentId(selectedKey);
     onCancel?.();
   }

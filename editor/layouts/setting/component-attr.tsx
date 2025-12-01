@@ -98,6 +98,7 @@ const ComponentAttr: React.FC = () => {
           name={setting.name}
           label={setting.label}
           initialValue={setting.defaultValue}
+          key={setting.name}
         >
           {renderFormElement(setting)}
         </Form.Item>

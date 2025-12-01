@@ -1,4 +1,4 @@
-import type {Component} from "../stores/components";
+import type {Component} from "../store/components";
 import React from "react";
 /**
  * 根据 id 递归查找组件

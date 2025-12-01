@@ -1,128 +1,121 @@
-import {useState} from "react";
-import {ItemType} from "../../item-type";
-import {useComponents, type Component} from "../../store/components";
+import {useState, useRef} from "react";
+// import { type Component} from "../../store/components";
+import {useComponents} from "../../store/components";
 import {getComponentById} from "../../store/components";
-import {Collapse, Input, Select, TreeSelect} from "antd";
-
-export const componentEventMap = {
-  [ItemType.Button]: [
-    {
-      name: "onClick",
-      label: "点击事件",
-    },
-  ],
-};
-
-export const componentMethodMap = {
-  [ItemType.Button]: [
-    {
-      name: "startLoading",
-      label: "开始loading",
-    },
-    {
-      name: "endLoading",
-      label: "结束loading",
-    },
-  ],
-};
+import {Collapse, Drawer, Button} from "antd";
+import FlowEvent from "../flow-event";
+import {componentEventMap} from "./componentEventMap";
+// import { componentMethodMap } from "./componentMethodMap";
 
 const ComponentEvent: React.FC = () => {
   const {curComponentId, updateComponentProps, components} = useComponents();
-  const [selectedComponent, setSelectedComponent] =
-    useState<Component | null>();
-
+  // const [selectedComponent, setSelectedComponent] = useState<Component | null>();
+  const [open, setOpen] = useState(false);
+  const [eventName, setEventName] = useState("");
   const curComponent = getComponentById(Number(curComponentId), components);
+  const flowEventRef = useRef<any>(null);
 
   // 事件类型改变
-  function typeChange(eventName: string, value: string) {
-    if (!curComponentId) {
-      return;
-    }
-    updateComponentProps(Number(curComponentId), {
-      [eventName]: {
-        type: value,
-      },
-    });
-  }
+  // function typeChange(eventName: string, value: string) {
+  //   if (!curComponentId) {
+  //     return;
+  //   }
+  //   updateComponentProps(Number(curComponentId), {
+  //     [eventName]: {
+  //       type: value,
+  //     },
+  //   });
+  // }
   // 消息类型改变
-  function messageTypeChange(eventName: string, value: string) {
-    if (!curComponentId) {
-      return;
-    }
-    updateComponentProps(Number(curComponentId), {
-      [eventName]: {
-        ...curComponent?.props?.[eventName],
-        config: {
-          ...curComponent?.props?.[eventName]?.config,
-          type: value,
-        },
-      },
-    });
-  }
+  // function messageTypeChange(eventName: string, value: string) {
+  //   if (!curComponentId) {
+  //     return;
+  //   }
+  //   updateComponentProps(Number(curComponentId), {
+  //     [eventName]: {
+  //       ...curComponent?.props?.[eventName],
+  //       config: {
+  //         ...curComponent?.props?.[eventName]?.config,
+  //         type: value,
+  //       },
+  //     },
+  //   });
+  // }
   // 消息文本改变
-  function messageTextChange(eventName: string, value: string) {
-    if (!curComponentId) {
-      return;
-    }
-    updateComponentProps(Number(curComponentId), {
-      [eventName]: {
-        ...curComponent?.props?.[eventName],
-        config: {
-          ...curComponent?.props?.[eventName]?.config,
-          text: value,
-        },
-      },
-    });
-  }
+  // function messageTextChange(eventName: string, value: string) {
+  //   if (!curComponentId) {
+  //     return;
+  //   }
+  //   updateComponentProps(Number(curComponentId), {
+  //     [eventName]: {
+  //       ...curComponent?.props?.[eventName],
+  //       config: {
+  //         ...curComponent?.props?.[eventName]?.config,
+  //         text: value,
+  //       },
+  //     },
+  //   });
+  // }
 
   // 改变选择被触发的组件
-  function componentChange(eventName: string, value: number) {
-    if (!curComponentId) {
-      return;
-    }
-    const component = getComponentById(value, components);
-    setSelectedComponent(component);
-    updateComponentProps(Number(curComponentId), {
-      [eventName]: {
-        ...curComponent?.props?.[eventName],
-        config: {
-          ...curComponent?.props?.[eventName]?.config,
-          componentId: value,
-        },
-      },
-    });
-  }
+  // function componentChange(eventName: string, value: number) {
+  //   if (!curComponentId) {
+  //     return;
+  //   }
+  //   const component = getComponentById(value, components);
+  //   setSelectedComponent(component);
+  //   updateComponentProps(Number(curComponentId), {
+  //     [eventName]: {
+  //       ...curComponent?.props?.[eventName],
+  //       config: {
+  //         ...curComponent?.props?.[eventName]?.config,
+  //         componentId: value,
+  //       },
+  //     },
+  //   });
+  // }
 
   // 组件方法改变
-  function componentMethodChange(eventName: string, value: string) {
-    if (!curComponentId) {
-      return;
-    }
-    updateComponentProps(Number(curComponentId), {
-      [eventName]: {
-        ...curComponent?.props?.[eventName],
-        config: {
-          ...curComponent?.props?.[eventName]?.config,
-          method: value,
-        },
-      },
-    });
-  }
+  // function componentMethodChange(eventName: string, value: string) {
+  //   if (!curComponentId) {
+  //     return;
+  //   }
+  //   updateComponentProps(Number(curComponentId), {
+  //     [eventName]: {
+  //       ...curComponent?.props?.[eventName],
+  //       config: {
+  //         ...curComponent?.props?.[eventName]?.config,
+  //         method: value,
+  //       },
+  //     },
+  //   });
+  // }
 
   // 脚本改变
-  function scriptChange(eventName: string, value: string) {
+  // function scriptChange(eventName: string, value: string) {
+  //   if (!curComponentId) {
+  //     return;
+  //   }
+  //   updateComponentProps(Number(curComponentId), {
+  //     [eventName]: {
+  //       ...curComponent?.props?.[eventName],
+  //       config: {
+  //         ...curComponent?.props?.[eventName]?.config,
+  //         script: value,
+  //       },
+  //     },
+  //   });
+  // }
+
+  function save() {
     if (!curComponentId) {
       return;
     }
+    const value = flowEventRef.current?.save();
     updateComponentProps(Number(curComponentId), {
-      [eventName]: {
-        ...curComponent?.props?.[eventName],
-        config: {
-          ...curComponent?.props?.[eventName]?.config,
-          script: value,
-        },
-      },
+      [eventName]: value,
     });
+    setOpen(false);
   }
 
   if (!curComponent) {
@@ -131,7 +124,56 @@ const ComponentEvent: React.FC = () => {
 
   return (
     <div className="w-[250px]">
-      {componentEventMap[curComponent?.name || ""].map((setting) => (
+      {(componentEventMap[curComponent?.name] || []).map((setting) => {
+        return (
+          <Collapse
+            key={setting.name}
+            defaultActiveKey={setting.name}
+            items={[
+              {
+                label: setting.label,
+                key: setting.name,
+                children: (
+                  <Button
+                    type="primary"
+                    onClick={() => {
+                      setOpen(true);
+                      setEventName(setting.name);
+                    }}
+                  >
+                    设置事件流
+                  </Button>
+                ),
+              },
+            ]}
+          />
+        );
+      })}
+      <Drawer
+        title="设置事件流"
+        open={open}
+        zIndex={1000}
+        width="100vw"
+        onClose={() => setOpen(false)}
+        extra={
+          <Button type="primary" onClick={save}>
+            保存
+          </Button>
+        }
+        push={false}
+        destroyOnHidden
+        styles={{
+          body: {
+            padding: 0,
+          },
+        }}
+      >
+        <FlowEvent
+          flowData={curComponent?.props?.[eventName]}
+          ref={flowEventRef}
+        />
+      </Drawer>
+      {/* {componentEventMap[curComponent?.name || ""].map((setting) => (
         <Collapse key={setting.name} defaultActiveKey={setting.name}>
           <Collapse.Panel header={setting.label} key={setting.name}>
             <div className="flex items-center gap-[10px]">
@@ -246,13 +288,6 @@ const ComponentEvent: React.FC = () => {
                 )}
               </div>
             )}
-            {/* (function(ctx) {
-              // // TODO
-              console.log(ctx)
-              setTimeout(function() {
-                ctx.setData('name', '123')
-              }, 1000)
-            })(ctx)  */}
             {curComponent?.props?.[setting.name]?.type === "execScript" && (
               <div className="flex flex-col gap-[12px] mt-[12px]">
                 <div className="flex align-center gap-[10px]">
@@ -277,7 +312,7 @@ const ComponentEvent: React.FC = () => {
             )}
           </Collapse.Panel>
         </Collapse>
-      ))}
+      ))} */}
     </div>
   );
 };

@@ -39,7 +39,7 @@ const ComponentItem: React.FC<ComponentItemProps> = ({
   return (
     <div
       ref={dragRef as unknown as React.Ref<HTMLDivElement>}
-      className="border-dashed border-[1px] border-[gray] bg-white cursor-move py-[8px] px-[20px] ml-[10px] rounded-lg"
+      className="border-dashed border-[1px] border-[gray] bg-white cursor-move py-[8px] px-[20px] rounded-lg"
       style={{opacity}}
     >
       {description}
