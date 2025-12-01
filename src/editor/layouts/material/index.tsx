@@ -18,7 +18,7 @@ const Material: React.FC = () => {
     );
   };
   return (
-    <div className="w-[200px] flex items-center m-[10px]">
+    <div className="w-[200px] flex p-[10px] gap-4 flex-wrap">
       <ComponentItem
         name={ItemType.Button}
         description="按钮"
