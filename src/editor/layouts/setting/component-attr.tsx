@@ -1,7 +1,8 @@
 import {Form, Select, Input} from "antd";
 import {useEffect, useMemo} from "react";
 // import {ItemType} from "../../item-type";
-import {useComponents, getComponentById} from "../../store/components";
+import {useComponentsStore} from "../../store/components";
+import {getComponentById} from "../../utils";
 import SettingFormItemInput from "../../common/setting-form-item/input";
 import {useComponentConfigStore} from "../../store/component-config";
 
@@ -61,7 +62,8 @@ import {useComponentConfigStore} from "../../store/component-config";
 // };
 
 const ComponentAttr: React.FC = () => {
-  const {components, curComponentId, updateComponentProps} = useComponents();
+  const {components, curComponentId, updateComponentProps} =
+    useComponentsStore();
   // const curComponent = components[curComponentId];
   const curComponent = useMemo(() => {
     return getComponentById(Number(curComponentId), components);

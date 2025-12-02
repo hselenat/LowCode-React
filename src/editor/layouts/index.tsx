@@ -6,13 +6,13 @@ import Material from "./material";
 import EditStage from "./stage/edit";
 import ProdStage from "./stage/prod";
 import Setting from "./setting";
-import {useComponents} from "../store/components";
+import {useComponentsStore} from "../store/components";
 import type {ComponentConfig} from "../interface";
 import {useComponentConfigStore} from "../store/component-config";
 import {Spin} from "antd";
 
 const Layout: React.FC = () => {
-  const {mode} = useComponents();
+  const {mode} = useComponentsStore();
   const {setComponentConfig} = useComponentConfigStore();
   const componentConfigRef = useRef<any>({});
   const [loading, setLoading] = useState<boolean>(true);

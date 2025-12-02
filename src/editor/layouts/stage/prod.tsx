@@ -1,5 +1,5 @@
 import React, {useRef} from "react";
-import {useComponents, type Component} from "../../store/components";
+import {useComponentsStore, type Component} from "../../store/components";
 import Space from "../../components/space";
 import Page from "../../components/page";
 import Button from "../../components/button";
@@ -17,7 +17,7 @@ const ComponentMap: {[key: string]: any} = {
 };
 
 const ProdStage: React.FC = () => {
-  const {components} = useComponents();
+  const {components} = useComponentsStore();
   const componentRefs = useRef<any>({});
   const {variables} = useVariableStore();
   const {data, setData} = usePageDataStore();

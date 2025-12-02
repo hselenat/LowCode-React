@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useDrop} from "react-dnd";
 import {ItemType} from "../../item-type";
-import {useComponents, type Component} from "../../store/components";
+import {useComponentsStore, type Component} from "../../store/components";
 import Space from "../../components/space";
 import Page from "../../components/page";
 import Button from "../../components/button";
@@ -29,7 +29,7 @@ const ComponentMap: {[key: string]: any} = {
 };
 
 const EditStage: React.FC = () => {
-  const {components, setCurComponentId, curComponentId} = useComponents();
+  const {components, setCurComponentId, curComponentId} = useComponentsStore();
   const selectedMaskRef = useRef<any>(null);
   const [hoverComponentId, setHoverComponentId] = useState<number | null>(null);
   console.log("components", components);

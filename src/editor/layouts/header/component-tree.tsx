@@ -1,5 +1,5 @@
 import {Modal, Tree} from "antd";
-import {useComponents} from "../../store/components";
+import {useComponentsStore} from "../../store/components";
 
 interface ComponentTreeProps {
   open?: boolean;
@@ -7,7 +7,7 @@ interface ComponentTreeProps {
 }
 
 const ComponentTree = ({open, onCancel}: ComponentTreeProps) => {
-  const {components, setCurComponentId} = useComponents();
+  const {components, setCurComponentId} = useComponentsStore();
   // 选择组件后，高亮当前选择的的组件，并关闭弹窗
   function componentSelect([selectedKey]: any[]) {
     setCurComponentId(selectedKey);

@@ -1,5 +1,5 @@
 import {Form, TreeSelect, Select} from "antd";
-import {useComponents} from "../../../../store/components";
+import {useComponentsStore} from "../../../../store/components";
 import {ItemType} from "../../../../item-type";
 import {getComponentById} from "../../../../utils";
 import {useMemo} from "react";
@@ -23,7 +23,7 @@ const componentMethodMap = {
   ],
 };
 function ComponentMethodSetting({values}: {values: any}) {
-  const {components} = useComponents();
+  const {components} = useComponentsStore();
   const component = useMemo(() => {
     if (values?.config?.componentId) {
       return getComponentById(values?.config?.componentId, components);

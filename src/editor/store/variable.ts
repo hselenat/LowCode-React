@@ -1,4 +1,5 @@
 import {create} from "zustand";
+import {createJSONStorage, persist} from "zustand/middleware";
 
 export interface Variable {
   // 变量名
@@ -22,7 +23,20 @@ interface Action {
   setVariables: (variables: Variable[]) => void;
 }
 
-export const useVariableStore = create<State & Action>((set) => ({
-  variables: [],
-  setVariables: (variables) => set({variables}),
-}));
+// export const useVariableStore = create<State & Action>((set) => ({
+//   variables: [],
+//   setVariables: (variables) => set({variables}),
+// }));
+
+export const useVariableStore = create(
+  persist<State & Action>(
+    (set) => ({
+      variables: [],
+      setVariables: (variables) => set({variables}),
+    }),
+    {
+      name: "variables",
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);

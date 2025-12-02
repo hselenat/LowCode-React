@@ -1,7 +1,7 @@
 import {useState, useRef} from "react";
 // import { type Component} from "../../store/components";
-import {useComponents} from "../../store/components";
-import {getComponentById} from "../../store/components";
+import {useComponentsStore} from "../../store/components";
+import {getComponentById} from "../../utils";
 import {Collapse, Drawer, Button} from "antd";
 import FlowEvent from "../flow-event";
 // import {componentEventMap} from "./componentEventMap";
@@ -9,7 +9,8 @@ import FlowEvent from "../flow-event";
 import {useComponentConfigStore} from "../../store/component-config";
 
 const ComponentEvent: React.FC = () => {
-  const {curComponentId, updateComponentProps, components} = useComponents();
+  const {curComponentId, updateComponentProps, components} =
+    useComponentsStore();
   // const [selectedComponent, setSelectedComponent] = useState<Component | null>();
   const {componentConfig} = useComponentConfigStore();
   const [open, setOpen] = useState(false);

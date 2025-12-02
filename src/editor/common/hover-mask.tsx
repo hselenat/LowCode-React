@@ -7,7 +7,7 @@ import {
   useMemo,
 } from "react";
 import {createPortal} from "react-dom";
-import {useComponents} from "../store/components";
+import {useComponentsStore} from "../store/components";
 import {getComponentById} from "../utils";
 
 interface Props {
@@ -30,7 +30,7 @@ const HoverMask = (props: Props, ref: any) => {
     toolsTop: 0,
     toolsLeft: 0,
   });
-  const {components, setCurComponentId} = useComponents();
+  const {components, setCurComponentId} = useComponentsStore();
 
   // 对外暴露更新位置方法
   useImperativeHandle(ref, () => ({

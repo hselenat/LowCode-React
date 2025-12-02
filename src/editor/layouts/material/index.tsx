@@ -1,12 +1,12 @@
 import ComponentItem from "../../common/component-item";
 // import {ItemType} from "../../item-type";
-import {useComponents} from "../../store/components";
+import {useComponentsStore} from "../../store/components";
 import {useComponentConfigStore} from "../../store/component-config";
 import {useMemo} from "react";
 import type {ComponentConfig} from "../../interface";
 
 const Material: React.FC = () => {
-  const {addComponent} = useComponents();
+  const {addComponent} = useComponentsStore();
   const {componentConfig} = useComponentConfigStore();
   const onDragEnd = (dropResult: any) => {
     console.log("onDragEnd", dropResult);

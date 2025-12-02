@@ -1,12 +1,12 @@
 import {Button, Space} from "antd";
-import {useComponents} from "../../store/components";
+import {useComponentsStore} from "../../store/components";
 import ComponentTree from "./component-tree";
 import {useState} from "react";
 import DefineVariable from "./define-variable";
 import {usePageDataStore} from "../../store/page-data";
 
 const Header: React.FC = () => {
-  const {mode, setMode, setCurComponentId} = useComponents();
+  const {mode, setMode, setCurComponentId} = useComponentsStore();
   const {resetData} = usePageDataStore();
 
   const [componentTreeVisible, setComponentTreeVisible] =
