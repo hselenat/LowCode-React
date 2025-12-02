@@ -5,7 +5,7 @@ import type {Context} from "../../interface";
 export default (ctx: Context) => {
   ctx.registerComponent("Form", {
     name: "Form",
-    desc: "表单",
+    desc: "表单-7",
     defaultProps: {},
     dev: FormDev,
     prod: FormProd,
@@ -32,6 +32,6 @@ export default (ctx: Context) => {
         desc: "提交",
       },
     ],
-    order: 6,
+    order: 7,
   });
 };

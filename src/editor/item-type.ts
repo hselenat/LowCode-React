@@ -1,10 +1,14 @@
 export const ItemType = {
-  Button: "Button",
-  Space: "Space",
   Page: "Page",
-  RemoteComponent: "RemoteComponent",
+  Text: "Text",
+  Space: "Space",
+  Button: "Button",
+  Modal: "Modal",
   Table: "Table",
   TableColumn: "TableColumn",
   Form: "Form",
   FormItem: "FormItem",
+  SearchForm: "SearchForm",
+  SearchFormItem: "SearchFormItem",
+  RemoteComponent: "RemoteComponent",
 };

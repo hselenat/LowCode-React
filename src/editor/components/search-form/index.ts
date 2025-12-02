@@ -1,14 +1,14 @@
-import TableDev from "./dev";
-import TableProd from "./prod";
+import SearchFormDev from "./dev";
+import SearchFormProd from "./prod";
 import type {Context} from "../../interface";
 
 export default (ctx: Context) => {
-  ctx.registerComponent("Table", {
-    name: "Table",
-    desc: "表格-5",
+  ctx.registerComponent("SearchForm", {
+    name: "SearchForm",
+    desc: "搜索区-9",
     defaultProps: {},
-    dev: TableDev,
-    prod: TableProd,
+    dev: SearchFormDev,
+    prod: SearchFormProd,
     setter: [
       {
         name: "url",
@@ -21,11 +21,7 @@ export default (ctx: Context) => {
         name: "search",
         desc: "搜索",
       },
-      {
-        name: "reload",
-        desc: "刷新",
-      },
     ],
-    order: 5,
+    order: 9,
   });
 };

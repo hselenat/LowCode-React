@@ -76,7 +76,12 @@ const EditStage: React.FC = () => {
   // 如果拖拽的组件是可以放置的，canDrop为true，通过这个可以给组件添加边框
   const [, dropRef] = useDrop({
     // 可以接受的元素类型
-    accept: [ItemType.Button, ItemType.Space, ItemType.RemoteComponent],
+    accept: [
+      ItemType.Text,
+      ItemType.Space,
+      ItemType.Button,
+      ItemType.RemoteComponent,
+    ],
     drop: (_, monitor) => {
       const didDrop = monitor.didDrop();
       if (didDrop) return;

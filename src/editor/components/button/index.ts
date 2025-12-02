@@ -11,7 +11,7 @@ export default (ctx: Context) => {
     setTimeout(() => {
       ctx.registerComponent("Button", {
         name: "Button",
-        desc: "按钮", // 组件描述
+        desc: "按钮-3", // 组件描述
         defaultProps: {
           text: {
             type: "static",
@@ -53,7 +53,7 @@ export default (ctx: Context) => {
             desc: "点击事件",
           },
         ],
-        order: 2,
+        order: 3,
       });
       // 异步拉去组件的CDN文件，成功后resolve
       resolve({});

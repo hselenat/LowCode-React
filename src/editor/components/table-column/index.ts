@@ -5,7 +5,7 @@ import TableColumnProd from "./prod";
 export default (ctx: Context) => {
   ctx.registerComponent("TableColumn", {
     name: "TableColumn",
-    desc: "表格列",
+    desc: "表格列-6",
     defaultProps: () => {
       return {
         dataIndex: {
@@ -47,6 +47,6 @@ export default (ctx: Context) => {
         ],
       },
     ],
-    order: 5,
+    order: 6,
   });
 };
