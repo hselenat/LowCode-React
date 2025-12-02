@@ -12,7 +12,7 @@ export default (ctx: Context) => {
     setter: [
       {
         name: "url",
-        label: "url",
+        label: "url", // 接口地址：api/user/list
         type: "input",
       },
     ],

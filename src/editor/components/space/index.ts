@@ -23,6 +23,21 @@ export default (ctx: Context) => {
     prod: SpaceProd,
     setter: [
       {
+        name: "direction",
+        label: "间距方向",
+        type: "select",
+        options: [
+          {
+            label: "垂直",
+            value: "vertical",
+          },
+          {
+            label: "水平",
+            value: "horizontal",
+          },
+        ],
+      },
+      {
         name: "size",
         label: "间距大小", // 字段名称
         type: "select",
@@ -38,21 +53,6 @@ export default (ctx: Context) => {
           {
             label: "大",
             value: "large",
-          },
-        ],
-      },
-      {
-        name: "direction",
-        label: "方向",
-        type: "select",
-        options: [
-          {
-            label: "垂直方向",
-            value: "vertical",
-          },
-          {
-            label: "水平方向",
-            value: "horizontal",
           },
         ],
       },

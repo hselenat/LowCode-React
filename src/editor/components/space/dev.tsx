@@ -8,12 +8,14 @@ interface Props {
   id: number;
   /** 当前组件的子节点 */
   children?: any;
+  /** 间距方向 */
+  direction?: "vertical" | "horizontal";
   /** 间距大小 */
   size?: "small" | "middle" | "large";
 }
 
 const Space: React.FC<Props> = (props) => {
-  const {id, children, size = "middle"} = props;
+  const {id, children, direction = "horizontal", size = "middle"} = props;
   const [{canDrop}, dropRef] = useDrop(() => ({
     accept: [ItemType.Space, ItemType.Button],
     drop: (_, monitor) => {
@@ -31,12 +33,14 @@ const Space: React.FC<Props> = (props) => {
   if (!children.length)
     return (
       <AntdSpace
-        size={size}
         data-component-id={id}
         ref={dropRef as unknown as React.Ref<HTMLDivElement>}
+        direction={direction}
+        size={size}
         className="p-[16px]"
         style={{
-          border: canDrop ? "1px solid blue" : "none",
+          border: canDrop ? "1px solid #ccc" : "none",
+          width: direction === "vertical" ? "100%" : "",
         }}
       >
         暂无内容
@@ -44,12 +48,14 @@ const Space: React.FC<Props> = (props) => {
     );
   return (
     <AntdSpace
-      size={size}
       data-component-id={id}
       ref={dropRef as unknown as React.Ref<HTMLDivElement>}
+      direction={direction}
+      size={size}
       className="p-[16px]"
       style={{
-        border: canDrop ? "1px solid blue" : "none",
+        border: canDrop ? "1px solid #ccc" : "none",
+        width: direction === "vertical" ? "100%" : "",
       }}
     >
       {children}

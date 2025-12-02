@@ -21,24 +21,9 @@ export default (ctx: Context) => {
         type: "select",
         options: [
           {
-            label: "默认",
-            value: "info",
-          },
-          {
-            label: "成功",
-            value: "success",
-          },
-          {
-            label: "错误",
-            value: "error",
-          },
-          {
-            label: "警告",
-            value: "warning",
-          },
-          {
-            label: "确认",
-            value: "confirm",
+            name: "title",
+            label: "页面标题",
+            type: "input",
           },
         ],
       },

@@ -1,4 +1,4 @@
-import {Form, Select} from "antd";
+import {Form, Select, Input} from "antd";
 import {useEffect, useMemo} from "react";
 // import {ItemType} from "../../item-type";
 import {useComponents, getComponentById} from "../../store/components";
@@ -95,6 +95,16 @@ const ComponentAttr: React.FC = () => {
   if (!curComponent) return null;
   return (
     <Form form={form} onValuesChange={onValueChange}>
+      <Form.Item name="componentId" label="组件id" key="componentId">
+        <Input
+          disabled={true}
+          placeholder={curComponent.id.toString()}
+          width={170}
+        />
+      </Form.Item>
+      <Form.Item name="componentName" label="组件名称" key="componentName">
+        <Input disabled={true} placeholder={curComponent.name} width={170} />
+      </Form.Item>
       {(componentConfig[curComponent.name]?.setter || []).map(
         (setting: any) => (
           <Form.Item

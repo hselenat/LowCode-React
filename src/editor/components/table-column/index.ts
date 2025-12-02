@@ -22,16 +22,6 @@ export default (ctx: Context) => {
     prod: TableColumnProd,
     setter: [
       {
-        name: "title",
-        label: "标题",
-        type: "input",
-      },
-      {
-        name: "dataIndex",
-        label: "字段",
-        type: "input",
-      },
-      {
         name: "type",
         label: "类型",
         type: "select",
@@ -45,6 +35,16 @@ export default (ctx: Context) => {
             value: "date",
           },
         ],
+      },
+      {
+        name: "title",
+        label: "标题",
+        type: "input",
+      },
+      {
+        name: "dataIndex",
+        label: "字段",
+        type: "input",
       },
     ],
     order: 6,

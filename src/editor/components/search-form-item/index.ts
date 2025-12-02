@@ -11,8 +11,29 @@ export default (ctx: Context) => {
     prod: SearchFormItemProd,
     setter: [
       {
-        name: "url",
-        label: "url",
+        name: "type",
+        label: "类型",
+        type: "select",
+        options: [
+          {
+            label: "文本",
+            value: "text",
+          },
+          {
+            label: "日期",
+            value: "date",
+          },
+        ],
+      },
+      {
+        name: "title",
+        label: "页面标题",
+        type: "input",
+        value: "标题",
+      },
+      {
+        name: "dataIndex",
+        label: "字段",
         type: "input",
       },
     ],

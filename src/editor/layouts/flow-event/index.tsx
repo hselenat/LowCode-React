@@ -226,6 +226,7 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
 
   function saveSetting() {
     settingRef.current?.save();
+    setSettingOpen(false);
   }
 
   return (
