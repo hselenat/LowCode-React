@@ -1,5 +1,5 @@
-import DevButton from "./dev";
-import ProdButton from "./prod";
+import ButtonDev from "./dev";
+import ButtonProd from "./prod";
 // import type {ComponentConfig} from "../../interface";
 import type {Context} from "../../interface";
 
@@ -18,12 +18,12 @@ export default (ctx: Context) => {
             value: "按钮",
           },
         },
-        dev: DevButton,
-        prod: ProdButton,
+        dev: ButtonDev,
+        prod: ButtonProd,
         setter: [
           {
             name: "type",
-            label: "按钮类型",
+            label: "类型",
             type: "select",
             options: [
               {
@@ -35,6 +35,11 @@ export default (ctx: Context) => {
                 value: "default",
               },
             ],
+          },
+          {
+            name: "text",
+            label: "文本",
+            type: "input",
           },
         ],
         methods: [

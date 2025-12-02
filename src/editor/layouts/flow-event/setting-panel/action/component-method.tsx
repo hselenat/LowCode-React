@@ -1,8 +1,9 @@
 import {Form, TreeSelect, Select} from "antd";
 import {useComponentsStore} from "../../../../store/components";
-import {ItemType} from "../../../../item-type";
+// import {ItemType} from "../../../../item-type";
 import {getComponentById} from "../../../../utils";
 import {useMemo} from "react";
+import {useComponentConfigStore} from "../../../../store/component-config";
 
 /**
  * 操作设置面板
@@ -10,20 +11,22 @@ import {useMemo} from "react";
  * @returns
  */
 
-const componentMethodMap = {
-  [ItemType.Button]: [
-    {
-      name: "startLoading",
-      label: "开始加载",
-    },
-    {
-      name: "endLoading",
-      label: "结束加载",
-    },
-  ],
-};
+// const componentMethodMap = {
+//   [ItemType.Button]: [
+//     {
+//       name: "startLoading",
+//       label: "开始加载",
+//     },
+//     {
+//       name: "endLoading",
+//       label: "结束加载",
+//     },
+//   ],
+// };
 function ComponentMethodSetting({values}: {values: any}) {
   const {components} = useComponentsStore();
+  const {componentConfig} = useComponentConfigStore();
+
   const component = useMemo(() => {
     if (values?.config?.componentId) {
       return getComponentById(values?.config?.componentId, components);
@@ -38,11 +41,11 @@ function ComponentMethodSetting({values}: {values: any}) {
           fieldNames={{value: "id", label: "name"}}
         />
       </Form.Item>
-      {componentMethodMap[component?.name || ""] && (
+      {componentConfig[component?.name || ""]?.methods && (
         <Form.Item label="方法" name={["config", "method"]}>
           <Select
             style={{width: 170}}
-            options={componentMethodMap[component?.name || ""].map(
+            options={componentConfig[component?.name || ""]?.methods!.map(
               (method: any) => ({
                 label: method.label,
                 value: method.name,

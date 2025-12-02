@@ -2,12 +2,13 @@ import React, {useEffect, useRef, useState} from "react";
 import {useDrop} from "react-dnd";
 import {ItemType} from "../../item-type";
 import {useComponentsStore, type Component} from "../../store/components";
-import Space from "../../components/space";
-import Page from "../../components/page";
-import Button from "../../components/button";
+import {useComponentConfigStore} from "../../store/component-config";
+// import Space from "../../components/space";
+// import Page from "../../components/page";
+// import Button from "../../components/button";
 import SelectedMask from "../../common/selected-mask";
 import HoverMask from "../../common/hover-mask";
-import {loadRemoteComponent} from "../../utils";
+// import {loadRemoteComponent} from "../../utils";
 
 // 动态加载组件，避免首屏加载所有组件
 // const LazyButton = React.lazy(() => import("../../components/button"));
@@ -17,19 +18,20 @@ import {loadRemoteComponent} from "../../utils";
 //   )
 // );
 
-const ComponentMap: {[key: string]: any} = {
-  Button: Button,
-  Space: Space,
-  Page: Page,
-  RemoteComponent: React.lazy(() =>
-    loadRemoteComponent(
-      "https://cdn.jsdelivr.net/npm/dbfu-remote-component@1.0.1/dist/bundle.umd.js"
-    )
-  ),
-};
+// const ComponentMap: {[key: string]: any} = {
+//   Button: Button,
+//   Space: Space,
+//   Page: Page,
+//   RemoteComponent: React.lazy(() =>
+//     loadRemoteComponent(
+//       "https://cdn.jsdelivr.net/npm/dbfu-remote-component@1.0.1/dist/bundle.umd.js"
+//     )
+//   ),
+// };
 
 const EditStage: React.FC = () => {
   const {components, setCurComponentId, curComponentId} = useComponentsStore();
+  const {componentConfig} = useComponentConfigStore();
   const selectedMaskRef = useRef<any>(null);
   const [hoverComponentId, setHoverComponentId] = useState<number | null>(null);
   console.log("components", components);
@@ -55,11 +57,11 @@ const EditStage: React.FC = () => {
 
   function renderComponents(components: Component[]): React.ReactNode {
     return components.map((component: Component) => {
-      if (!ComponentMap[component.name]) return null;
+      if (!componentConfig?.[component.name]?.dev) return null;
       const props = formatProps(component);
-      if (ComponentMap[component.name]) {
+      if (componentConfig?.[component.name]?.dev) {
         return React.createElement(
-          ComponentMap[component.name],
+          componentConfig?.[component.name]?.dev,
           {
             key: component.id,
             id: component.id,
@@ -74,13 +76,20 @@ const EditStage: React.FC = () => {
     });
   }
   // 如果拖拽的组件是可以放置的，canDrop为true，通过这个可以给组件添加边框
-  const [, dropRef] = useDrop({
+  const [{canDrop}, dropRef] = useDrop({
     // 可以接受的元素类型
     accept: [
-      ItemType.Text,
       ItemType.Space,
+      ItemType.Text,
       ItemType.Button,
-      ItemType.RemoteComponent,
+      ItemType.Modal,
+      ItemType.Table,
+      ItemType.TableColumn,
+      ItemType.Form,
+      ItemType.FormItem,
+      ItemType.SearchForm,
+      ItemType.SearchFormItem,
+      // ItemType.RemoteComponent,
     ],
     drop: (_, monitor) => {
       const didDrop = monitor.didDrop();
@@ -164,9 +173,12 @@ const EditStage: React.FC = () => {
   return (
     <div
       ref={dropRef as unknown as React.Ref<HTMLDivElement>}
-      className="stage flex-1 h-[100vh]"
+      className="stage flex-1 h-[100%] p-[24px]"
+      style={{border: canDrop ? "1px solid blue" : "none"}}
     >
-      {renderComponents(components)}
+      <React.Suspense fallback="loading...">
+        {renderComponents(components)}
+      </React.Suspense>
       {curComponentId && (
         <SelectedMask
           ref={selectedMaskRef}

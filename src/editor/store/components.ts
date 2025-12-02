@@ -75,6 +75,7 @@ export const useComponentsStore = create(
       curComponentId: null,
       curComponent: null,
       mode: "edit",
+      // editType: "page",
       addComponent: (component: Component, parentId?: number) => {
         set((state: any) => {
           // 如果有上级ID，把当前组件添加到父组件的子组件中

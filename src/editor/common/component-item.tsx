@@ -1,5 +1,5 @@
 import {useDrag} from "react-dnd";
-import {ItemType} from "../item-type";
+import {useComponentConfigStore} from "../store/component-config";
 
 interface ComponentItemProps {
   /** 组件名称 */
@@ -15,16 +15,26 @@ const ComponentItem: React.FC<ComponentItemProps> = ({
   description,
   onDragEnd,
 }) => {
+  const {componentConfig} = useComponentConfigStore();
   const [{isDragging}, dragRef] = useDrag(() => ({
     type: name,
     end: (_, monitor) => {
       const dropResult = monitor.getDropResult();
       console.log("dropResult", dropResult);
       if (!dropResult) return;
+      let props: any = {};
+      const defaultProps = componentConfig[name]?.defaultProps;
+      if (defaultProps) {
+        if (typeof defaultProps === "function") {
+          props = defaultProps();
+        } else {
+          props = defaultProps || {};
+        }
+      }
       if (onDragEnd) {
         onDragEnd({
           name,
-          props: name === ItemType.Button ? {children: "按钮"} : {},
+          props,
           ...dropResult,
         });
       }
