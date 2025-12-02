@@ -4,16 +4,20 @@ import {useDrop} from "react-dnd";
 import {ItemType} from "../../item-type";
 
 interface Props {
+  /** 当前组件的id */
   id: number;
-  children: any;
+  /** 当前组件的子节点 */
+  children?: any[];
+  /** 搜索回调 */
   onSearch?: (values: any) => void;
 }
 
 const Form: React.FC<Props> = (Props) => {
   const {id, children, onSearch} = Props;
   const [form] = AntdForm.useForm();
+
   const searchItems = useMemo(() => {
-    return children.map(children, (item: any) => {
+    return React.Children.map(children, (item: any) => {
       return {
         id: item.props.id,
         label: item.props.label,
@@ -30,11 +34,10 @@ const Form: React.FC<Props> = (Props) => {
   };
 
   const [{canDrop}, dropRef] = useDrop(() => ({
-    accept: [ItemType.Space, ItemType.Button],
+    accept: [ItemType.FormItem],
     drop: (_, monitor) => {
       const didDrop = monitor.didDrop();
       if (didDrop) return;
-      // 这里把当前组件的id返回出去，在拖拽结束事件里可以拿到这个id。
       return {id};
     },
     collect: (monitor) => ({
@@ -43,12 +46,13 @@ const Form: React.FC<Props> = (Props) => {
     }),
   }));
 
-  if (!children.length) {
+  if (!children?.length) {
     return (
       <div
         data-component-id={id}
         ref={dropRef as unknown as React.Ref<HTMLDivElement>}
-        className="flex justify-center"
+        className="p-[16px] flex justify-center"
+        style={{border: canDrop ? "1px solid #ccc" : "none"}}
       >
         暂无内容
       </div>
@@ -63,7 +67,7 @@ const Form: React.FC<Props> = (Props) => {
       style={{border: canDrop ? "1px solid #ccc" : "none"}}
     >
       <AntdForm
-        labelCol={{span: 6}}
+        labelCol={{span: 5}}
         wrapperCol={{span: 18}}
         form={form}
         onFinish={search}

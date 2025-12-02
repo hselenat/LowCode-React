@@ -1,5 +1,5 @@
 import {Form as AntdForm, Input} from "antd";
-import React, {useMemo} from "react";
+import React, {forwardRef, useImperativeHandle, useMemo} from "react";
 import axios from "axios";
 
 interface Props {
@@ -8,14 +8,27 @@ interface Props {
   children: any;
   onSearch?: (values: any) => void;
   onSaveSuccess?: (values: any) => void;
-  onSaveError?: (error: any) => void;
+  onSaveFail?: (error: any) => void;
 }
 
-const Form: React.FC<Props> = (Props) => {
-  const {children, onSaveSuccess, onSaveError, url} = Props;
+const Form = (Props: Props, ref: any) => {
+  const {children, onSaveSuccess, onSaveFail, url} = Props;
   const [form] = AntdForm.useForm();
+
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        submit: () => {
+          form.submit();
+        },
+      };
+    },
+    [form]
+  );
+
   const searchItems = useMemo(() => {
-    return children.map(children, (item: any) => {
+    return React.Children.map(children, (item: any) => {
       return {
         id: item.props.id,
         label: item.props.label,
@@ -29,28 +42,28 @@ const Form: React.FC<Props> = (Props) => {
     try {
       if (url) {
         await axios.post(url, values);
-        onSaveSuccess?.(values);
+        if (onSaveSuccess) {
+          onSaveSuccess?.(values);
+        }
       }
     } catch (error) {
       console.error("保存失败:", error);
-      onSaveError?.(error);
+      if (onSaveFail) {
+        onSaveFail?.(error);
+      }
     }
   }
 
   return (
     <AntdForm
-      labelCol={{span: 6}}
+      name="form"
+      labelCol={{span: 5}}
       wrapperCol={{span: 18}}
       form={form}
       onFinish={save}
     >
       {searchItems.map((item: any) => (
-        <AntdForm.Item
-          data-component-id={item.id}
-          key={item.id}
-          label={item.label}
-          name={item.name}
-        >
+        <AntdForm.Item key={item.id} label={item.label} name={item.name}>
           <Input placeholder="请输入" />
         </AntdForm.Item>
       ))}
@@ -58,4 +71,4 @@ const Form: React.FC<Props> = (Props) => {
   );
 };
 
-export default Form;
+export default forwardRef(Form);

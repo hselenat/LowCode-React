@@ -19,11 +19,11 @@ export default (ctx: Context) => {
     events: [
       {
         name: "onSaveSuccess",
-        desc: "保存成功事件",
+        desc: "保存成功",
       },
       {
-        name: "onSaveError",
-        desc: "保存失败事件",
+        name: "onSaveFail",
+        desc: "保存失败",
       },
     ],
     methods: [
