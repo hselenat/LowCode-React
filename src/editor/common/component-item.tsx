@@ -7,7 +7,7 @@ interface ComponentItemProps {
   /** 组件描述 */
   description: string;
   /** 拖拽结果的回调 */
-  onDragEnd: (data: {name: string; props?: Record<string, unknown>}) => void;
+  onDragEnd: (data: {name: string; props: any; id?: number}) => void;
 }
 
 const ComponentItem: React.FC<ComponentItemProps> = ({

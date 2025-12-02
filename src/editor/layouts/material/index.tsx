@@ -8,7 +8,11 @@ import type {ComponentConfig} from "../../interface";
 const Material: React.FC = () => {
   const {addComponent} = useComponentsStore();
   const {componentConfig} = useComponentConfigStore();
-  const onDragEnd = (dropResult: any) => {
+  /**
+   * 拖拽结束时，添加组件到画布
+   * @param dropResult 拖拽结果
+   */
+  const onDragEnd = (dropResult: {name: string; props: any; id?: number}) => {
     console.log("onDragEnd", dropResult);
     addComponent(
       {
@@ -55,12 +59,7 @@ const Material: React.FC = () => {
         onDragEnd={onDragEnd}
       /> */}
       {components.map((item) => (
-        <ComponentItem
-          key={item.name}
-          name={item.name}
-          description={item.description}
-          onDragEnd={onDragEnd}
-        />
+        <ComponentItem key={item.name} onDragEnd={onDragEnd} {...item} />
       ))}
     </div>
   );
