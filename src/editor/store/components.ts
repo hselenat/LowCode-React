@@ -16,6 +16,13 @@ export interface Component {
   props: any;
   /** 组件子元素 */
   children?: Component[];
+  /** 组件是否隐藏 */
+  hidden?: {
+    /** 隐藏类型 */
+    type: "static" | "variable";
+    /** 隐藏值 */
+    value: boolean | string;
+  };
 }
 
 interface State {
@@ -26,17 +33,23 @@ interface State {
   curComponent?: Component | null;
   /** 编辑模式或预览模式 */
   mode: "edit" | "preview";
+  /** 编辑类型 */
+  editType: "page" | "event";
 }
 
 interface Action {
   /** 添加组件 */
   addComponent: (component: Component, parentId?: number) => void;
   /** 设置当前选中的组件ID */
-  setCurComponentId: (componentId?: number) => void;
+  setCurComponentId: (componentId?: number | null) => void;
   /** 更新当前选择组件的属性 */
   updateComponentProps: (componentId: number, props: any) => void;
   /** 设置编辑模式或预览模式 */
   setMode: (mode: "edit" | "preview") => void;
+  /** 设置编辑类型 */
+  setEditType: (editType: State["editType"]) => void;
+  /** 删除组件 */
+  deleteComponent: (componentId: number | null | undefined) => void;
 }
 
 /**
@@ -63,7 +76,7 @@ interface Action {
 
 export const useComponentsStore = create(
   persist<State & Action>(
-    (set) => ({
+    (set, get) => ({
       components: [
         {
           id: 1,
@@ -75,7 +88,7 @@ export const useComponentsStore = create(
       curComponentId: null,
       curComponent: null,
       mode: "edit",
-      // editType: "page",
+      editType: "page",
       addComponent: (component: Component, parentId?: number) => {
         set((state: any) => {
           // 如果有上级ID，把当前组件添加到父组件的子组件中
@@ -98,7 +111,7 @@ export const useComponentsStore = create(
           return {components: [...state.components, component]};
         });
       },
-      setCurComponentId: (componentId?: number) => {
+      setCurComponentId: (componentId?: number | null) => {
         set((state: any) => ({
           curComponentId: componentId,
           curComponent: componentId
@@ -124,6 +137,29 @@ export const useComponentsStore = create(
       },
       setMode: (mode: "edit" | "preview") => {
         set({mode});
+      },
+      setEditType: (editType: "page" | "event") => set({editType}),
+      deleteComponent: (componentId: number | null | undefined) => {
+        if (!componentId) return;
+        const component = getComponentById(componentId, get().components);
+        if (component?.parentId) {
+          const parentComponent = getComponentById(
+            component?.parentId,
+            get().components
+          );
+          if (parentComponent?.children) {
+            parentComponent.children = parentComponent.children.filter(
+              (item) => item.id !== +componentId
+            );
+            set({components: [...get().components]});
+          }
+        } else {
+          set({
+            components: get().components.filter(
+              (item) => item.id !== +componentId
+            ),
+          });
+        }
       },
     }),
     {

@@ -1,8 +1,8 @@
 import React, {useRef} from "react";
 import {useComponentsStore, type Component} from "../../store/components";
-import Space from "../../components/space";
-import Page from "../../components/page";
-import Button from "../../components/button";
+// import Space from "../../components/space";
+// import Page from "../../components/page";
+// import Button from "../../components/button";
 import {message} from "antd";
 // import {componentEventMap} from "../../layouts/setting/componentEventMap";
 import {usePageDataStore} from "../../store/page-data";
@@ -10,11 +10,11 @@ import {useVariableStore} from "../../store/variable";
 import {type Node} from "../flow-event/data";
 import {useComponentConfigStore} from "../../store/component-config";
 
-const ComponentMap: {[key: string]: any} = {
-  Button: Button,
-  Space: Space,
-  Page: Page,
-};
+// const ComponentMap: {[key: string]: any} = {
+//   Button: Button,
+//   Space: Space,
+//   Page: Page,
+// };
 
 const ProdStage: React.FC = () => {
   const {components} = useComponentsStore();
@@ -240,14 +240,27 @@ const ProdStage: React.FC = () => {
   }
   function renderComponents(components: Component[]): React.ReactNode {
     return components.map((component) => {
-      if (!ComponentMap[component.name]) {
+      if (!componentConfig[component.name]?.prod) {
         return null;
       }
+      if (
+        component.props.hidden?.type === "static" &&
+        component.props.hidden.value
+      ) {
+        return null;
+      }
+      if (
+        component.props.hidden?.type === "variable" &&
+        data[component.props.hidden.value] === true
+      ) {
+        return null;
+      }
+
       let props = formatProps(component);
       props = {...props, ...handleEvent(component)};
-      if (ComponentMap[component.name]) {
+      if (componentConfig[component.name]?.prod) {
         return React.createElement(
-          ComponentMap[component.name],
+          componentConfig[component.name]?.prod,
           {
             key: component.id,
             id: component.id,

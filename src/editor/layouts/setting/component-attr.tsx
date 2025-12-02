@@ -5,7 +5,7 @@ import {useComponentsStore} from "../../store/components";
 import {getComponentById} from "../../utils";
 import SettingFormItemInput from "../../common/setting-form-item/input";
 import {useComponentConfigStore} from "../../store/component-config";
-
+import SettingFormItemSwitch from "../../common/setting-form-item/switch";
 // const componentSettingMap = {
 //   [ItemType.Button]: [
 //     {
@@ -106,6 +106,14 @@ const ComponentAttr: React.FC = () => {
       </Form.Item>
       <Form.Item name="componentName" label="组件名称" key="componentName">
         <Input disabled={true} placeholder={curComponent.name} width={170} />
+      </Form.Item>
+      <Form.Item label="是否隐藏">
+        <SettingFormItemSwitch
+          value={curComponent.props.hidden}
+          onChange={(value: any) => {
+            updateComponentProps(Number(curComponentId), {hidden: value});
+          }}
+        />
       </Form.Item>
       {(componentConfig[curComponent.name]?.setter || []).map(
         (setting: any) => (
