@@ -126,26 +126,28 @@ const ComponentEvent: React.FC = () => {
   }
 
   return (
-    <div className="w-[250px]">
-      {(componentConfig[curComponent?.name]?.events || []).map((setting) => {
+    <div className="px-[12px]">
+      {(componentConfig[curComponent?.name]?.events || []).map((event) => {
         return (
           <Collapse
-            key={setting.name}
-            defaultActiveKey={setting.name}
+            key={event.name}
+            defaultActiveKey={event.name}
             items={[
               {
-                label: setting.label,
-                key: setting.name,
+                label: event.desc,
+                key: event.name,
                 children: (
-                  <Button
-                    type="primary"
-                    onClick={() => {
-                      setOpen(true);
-                      setEventName(setting.name);
-                    }}
-                  >
-                    设置事件流
-                  </Button>
+                  <div className="text-center">
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        setOpen(true);
+                        setEventName(event.name);
+                      }}
+                    >
+                      设置事件流
+                    </Button>
+                  </div>
                 ),
               },
             ]}

@@ -54,7 +54,7 @@ export default (ctx: Context) => {
         ],
         events: [
           {
-            name: "click",
+            name: "onClick",
             desc: "点击事件",
           },
         ],
