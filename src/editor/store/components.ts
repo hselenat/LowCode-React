@@ -77,14 +77,7 @@ interface Action {
 export const useComponentsStore = create(
   persist<State & Action>(
     (set, get) => ({
-      components: [
-        {
-          id: 1,
-          name: "Page",
-          desc: "页面组件",
-          props: {},
-        },
-      ], // 初始化默认有一个页面
+      components: [], // 初始化默认有一个页面
       curComponentId: null,
       curComponent: null,
       mode: "edit",
