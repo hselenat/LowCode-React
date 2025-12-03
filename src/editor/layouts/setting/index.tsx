@@ -10,8 +10,9 @@ const Setting: React.FC = () => {
   const [key, setKey] = useState<SegmentedValue>("attr");
   if (!curComponentId) return null;
   return (
-    <div className="w-[200px] pt-[20px] pl-[20px]">
+    <div>
       <Segmented
+        block
         options={[
           {label: "属性", value: "attr"},
           {label: "事件", value: "event"},

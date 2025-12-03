@@ -96,16 +96,17 @@ const ComponentAttr: React.FC = () => {
 
   if (!curComponent) return null;
   return (
-    <Form form={form} onValuesChange={onValueChange}>
-      <Form.Item name="componentId" label="组件id" key="componentId">
-        <Input
-          disabled={true}
-          placeholder={curComponent.id.toString()}
-          width={170}
-        />
+    <Form
+      form={form}
+      onValuesChange={onValueChange}
+      labelCol={{span: 8}}
+      wrapperCol={{span: 14}}
+    >
+      <Form.Item label="组件id">
+        <Input disabled value={curComponent.id} />
       </Form.Item>
-      <Form.Item name="componentName" label="组件名称" key="componentName">
-        <Input disabled={true} placeholder={curComponent.name} width={170} />
+      <Form.Item label="组件名称">
+        <Input disabled value={curComponent.name} />
       </Form.Item>
       <Form.Item label="是否隐藏">
         <SettingFormItemSwitch

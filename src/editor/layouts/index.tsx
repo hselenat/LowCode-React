@@ -61,13 +61,13 @@ const Layout: React.FC = () => {
       </div> */}
       {mode === "edit" ? (
         <Allotment>
-          <Allotment.Pane preferredSize={200} maxSize={400} minSize={200}>
+          <Allotment.Pane preferredSize={240} maxSize={400} minSize={200}>
             <Material />
           </Allotment.Pane>
           <Allotment.Pane>
             <EditStage />
           </Allotment.Pane>
-          <Allotment.Pane preferredSize={200} maxSize={400} minSize={200}>
+          <Allotment.Pane preferredSize={300} maxSize={500} minSize={300}>
             <Setting />
           </Allotment.Pane>
         </Allotment>

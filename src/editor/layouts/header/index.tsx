@@ -15,7 +15,7 @@ const Header: React.FC = () => {
     useState<boolean>(false);
 
   return (
-    <div className="h-[50px] flex items-center justify-end w-[100%] px-[24px]">
+    <div className="h-[50px] flex items-center justify-end w-[100%] px-[24px] border-solid border-[1px] border-[#ccc]">
       {/* header - {mode} */}
       <div className="flex-1 font-mono font-bold">lowCode平台</div>
       <Space>
