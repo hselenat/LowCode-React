@@ -5,16 +5,26 @@ import {ItemType} from "../../item-type";
 interface Props {
   /** 当前组件的id */
   id: number;
-  /** 当前组件的子节点 */
-  children?: any;
   /** 字体大小 */
-  fontSize?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  fontSize?: string;
+  /** 当前组件的文本内容 */
+  text?: string;
+  /** 字体加粗 */
+  fontWeight?: string;
+  /** 字体颜色 */
+  textColor?: string;
 }
 
 const Text: React.FC<Props> = (props) => {
-  const {id, children, fontSize = "normal"} = props;
+  const {
+    id,
+    fontSize = "text-base",
+    text,
+    fontWeight = "font-normal",
+    textColor = "text-current",
+  } = props;
   const [{canDrop}, dropRef] = useDrop(() => ({
-    accept: [ItemType.Space, ItemType.Button, ItemType.Text],
+    accept: [ItemType.Text],
     drop: (_, monitor) => {
       const didDrop = monitor.didDrop();
       if (didDrop) return;
@@ -31,14 +41,12 @@ const Text: React.FC<Props> = (props) => {
     <div
       data-component-id={id}
       ref={dropRef as unknown as React.Ref<HTMLDivElement>}
-      className="p-[16px]"
+      className={`p-[16px] ${fontSize} ${fontWeight} ${textColor}`}
       style={{
         border: canDrop ? "1px solid blue" : "none",
-        fontSize,
-        color: "#232323",
       }}
     >
-      {children || "暂无内容"}
+      {text || "请输入文本内容"}
     </div>
   );
 };

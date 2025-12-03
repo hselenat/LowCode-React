@@ -1,25 +1,32 @@
 import React from "react";
 
 interface Props {
-  /** 当前组件的id */
-  id: number;
-  /** 当前组件的子节点 */
-  children?: any;
   /** 字体大小 */
-  fontSize?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  fontSize?: string;
+  /** 当前组件的文本内容 */
+  text?: string;
+  /** 字体加粗 */
+  fontWeight?: string;
+  /** 字体颜色 */
+  textColor?: string;
 }
 
 const Text: React.FC<Props> = (props) => {
-  const {children, fontSize = "normal"} = props;
+  const {
+    fontSize = "text-base",
+    text,
+    fontWeight = "font-normal",
+    textColor = "text-current",
+  } = props;
 
   return (
     <div
-      className="p-[16px]"
+      className={`p-[16px] ${fontSize} ${fontWeight} ${textColor}`}
       style={{
         fontSize,
       }}
     >
-      {children || "暂无内容"}
+      {text || "请输入文本内容"}
     </div>
   );
 };
