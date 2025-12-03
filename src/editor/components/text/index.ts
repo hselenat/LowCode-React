@@ -7,7 +7,7 @@ import type {Context} from "../../interface";
 export default (ctx: Context) => {
   ctx.registerComponent("Text", {
     name: "Text",
-    desc: "标题文本-2", // 组件描述
+    desc: "标题文本", // 组件描述
     defaultProps: {
       text: {
         type: "static",

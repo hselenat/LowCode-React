@@ -5,7 +5,7 @@ import type {Context} from "../../interface";
 export default (ctx: Context) => {
   ctx.registerComponent("Modal", {
     name: "Modal",
-    desc: "对话框-4",
+    desc: "对话框",
     defaultProps: {
       title: {
         type: "static",

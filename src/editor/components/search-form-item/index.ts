@@ -5,7 +5,7 @@ import type {Context} from "../../interface";
 export default (ctx: Context) => {
   ctx.registerComponent("SearchFormItem", {
     name: "SearchFormItem",
-    desc: "搜索项-10",
+    desc: "搜索项",
     defaultProps: () => {
       return {
         name: {type: "static", value: new Date().getTime()},

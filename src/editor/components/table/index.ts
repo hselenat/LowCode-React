@@ -5,7 +5,7 @@ import type {Context} from "../../interface";
 export default (ctx: Context) => {
   ctx.registerComponent("Table", {
     name: "Table",
-    desc: "表格-5",
+    desc: "表格",
     defaultProps: {},
     dev: TableDev,
     prod: TableProd,

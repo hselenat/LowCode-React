@@ -11,7 +11,7 @@ export default (ctx: Context) => {
     setTimeout(() => {
       ctx.registerComponent("Button", {
         name: "Button",
-        desc: "按钮-3", // 组件描述
+        desc: "按钮", // 组件描述
         defaultProps: {
           text: {
             type: "static",
