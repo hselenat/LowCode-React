@@ -35,6 +35,7 @@ const Text: React.FC<Props> = (props) => {
       style={{
         border: canDrop ? "1px solid blue" : "none",
         fontSize,
+        color: "#232323",
       }}
     >
       {children || "暂无内容"}

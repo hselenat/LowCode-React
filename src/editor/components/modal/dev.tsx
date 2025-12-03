@@ -1,14 +1,52 @@
-import {Modal as AntdModal} from "antd";
+import React from "react";
+import {useDrop} from "react-dnd";
+import {ItemType} from "../../item-type";
 
-const Modal = (props: any) => {
+const Modal: React.FC<any> = ({id, children, title}) => {
+  const [{canDrop}, dropRef] = useDrop(() => ({
+    accept: [ItemType.Form, ItemType.Table],
+    drop: (_, monitor) => {
+      const didDrop = monitor.didDrop();
+      if (didDrop) {
+        return;
+      }
+
+      return {
+        id,
+      };
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  }));
+
+  if (!children?.length) {
+    return (
+      <div data-component-id={id} className="p-[10px]">
+        <h4>{title}</h4>
+        <div
+          ref={dropRef as unknown as React.RefObject<HTMLDivElement>}
+          className="p-[16px] flex justify-center"
+          style={{border: canDrop ? "1px solid #ccc" : "none"}}
+        >
+          暂无内容
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <AntdModal
-      data-component-id={props.id}
-      title="Basic Modal"
-      closable={{"aria-label": "Custom Close Button"}}
-    >
-      {props.children}
-    </AntdModal>
+    <div data-component-id={id} className="p-[10px]">
+      <h4>{title}</h4>
+      <div
+        ref={dropRef as unknown as React.RefObject<HTMLDivElement>}
+        className="p-[16px]"
+        style={{border: canDrop ? "1px solid #ccc" : "none"}}
+      >
+        {children}
+      </div>
+    </div>
   );
 };
 

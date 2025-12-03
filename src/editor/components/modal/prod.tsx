@@ -1,14 +1,46 @@
 import {Modal as AntdModal} from "antd";
+import {forwardRef, useImperativeHandle, useState} from "react";
 
-const Modal = (props: any) => {
+const Modal = ({children, title, onOk}: any, ref: any) => {
+  const [open, setOpen] = useState(false);
+
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        open: () => {
+          setOpen(true);
+        },
+        close: () => {
+          setOpen(false);
+        },
+        startConfirmLoading: () => {
+          setConfirmLoading(true);
+        },
+        endConfirmLoading: () => {
+          setConfirmLoading(false);
+        },
+      };
+    },
+    []
+  );
+
   return (
     <AntdModal
-      title="Basic Modal"
-      closable={{"aria-label": "Custom Close Button"}}
+      title={title}
+      open={open}
+      onCancel={() => {
+        setOpen(false);
+      }}
+      onOk={onOk}
+      confirmLoading={confirmLoading}
+      destroyOnHidden
     >
-      {props.children}
+      {children}
     </AntdModal>
   );
 };
 
-export default Modal;
+export default forwardRef(Modal);

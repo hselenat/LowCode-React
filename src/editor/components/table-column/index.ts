@@ -16,6 +16,7 @@ export default (ctx: Context) => {
           type: "static",
           value: "标题",
         },
+        // type: 'text',
       };
     },
     dev: TableColumnDev,

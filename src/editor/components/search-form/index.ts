@@ -9,16 +9,9 @@ export default (ctx: Context) => {
     defaultProps: {},
     dev: SearchFormDev,
     prod: SearchFormProd,
-    setter: [
+    events: [
       {
-        name: "url",
-        label: "url",
-        type: "input",
-      },
-    ],
-    methods: [
-      {
-        name: "search",
+        name: "onSearch",
         desc: "搜索",
       },
     ],

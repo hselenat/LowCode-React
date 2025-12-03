@@ -28,12 +28,12 @@ export default (ctx: Context) => {
         type: "select",
         options: [
           {
-            label: "垂直",
-            value: "vertical",
-          },
-          {
             label: "水平",
             value: "horizontal",
+          },
+          {
+            label: "垂直",
+            value: "vertical",
           },
         ],
       },

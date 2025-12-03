@@ -23,7 +23,7 @@ export default (ctx: Context) => {
         type: "select",
         options: [
           {
-            label: "正问",
+            label: "正文",
             value: "normal",
           },
           {

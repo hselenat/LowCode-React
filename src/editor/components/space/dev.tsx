@@ -1,4 +1,5 @@
 import {Space as AntdSpace} from "antd";
+import type {SpaceSize} from "antd/es/space";
 import React from "react";
 import {useDrop} from "react-dnd";
 import {ItemType} from "../../item-type";
@@ -7,21 +8,25 @@ interface Props {
   /** 当前组件的id */
   id: number;
   /** 当前组件的子节点 */
-  children?: any;
+  children: any;
   /** 间距方向 */
-  direction?: "vertical" | "horizontal";
-  /** 间距大小 */
-  size?: "small" | "middle" | "large";
+  direction: "vertical" | "horizontal";
+  /** 当前组件的尺寸 */
+  size: SpaceSize;
 }
 
-const Space: React.FC<Props> = (props) => {
+const Space: React.FC<Props> = (props: Props) => {
   const {id, children, direction = "horizontal", size = "middle"} = props;
   const [{canDrop}, dropRef] = useDrop(() => ({
-    accept: [ItemType.Space, ItemType.Button],
+    accept: [
+      ItemType.Space,
+      ItemType.Button,
+      ItemType.Table,
+      ItemType.SearchForm,
+    ],
     drop: (_, monitor) => {
       const didDrop = monitor.didDrop();
       if (didDrop) return;
-      // 这里把组件的id返回，在拖拽结束时间里可以拿到这个id
       return {id};
     },
     collect: (monitor) => ({

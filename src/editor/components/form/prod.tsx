@@ -3,11 +3,17 @@ import React, {forwardRef, useImperativeHandle, useMemo} from "react";
 import axios from "axios";
 
 interface Props {
+  /** 组件的id */
   id: number;
+  /** 提交表单的url接口地址 */
   url?: string;
+  /** 子组件，表单项 */
   children: any;
+  /** 搜索事件 */
   onSearch?: (values: any) => void;
+  /** 保存成功事件 */
   onSaveSuccess?: (values: any) => void;
+  /** 保存失败事件 */
   onSaveFail?: (error: any) => void;
 }
 

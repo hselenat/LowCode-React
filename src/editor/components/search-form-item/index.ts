@@ -6,7 +6,13 @@ export default (ctx: Context) => {
   ctx.registerComponent("SearchFormItem", {
     name: "SearchFormItem",
     desc: "搜索项-10",
-    defaultProps: {},
+    defaultProps: () => {
+      return {
+        name: {type: "static", value: new Date().getTime()},
+        label: {type: "static", value: "标题"},
+        // type: 'input',
+      };
+    },
     dev: SearchFormItemDev,
     prod: SearchFormItemProd,
     setter: [
@@ -16,31 +22,20 @@ export default (ctx: Context) => {
         type: "select",
         options: [
           {
-            label: "文本",
-            value: "text",
-          },
-          {
-            label: "日期",
-            value: "date",
+            label: "输入框",
+            value: "input",
           },
         ],
       },
       {
-        name: "title",
-        label: "页面标题",
+        name: "label",
+        label: "标题",
         type: "input",
-        value: "标题",
       },
       {
-        name: "dataIndex",
+        name: "name",
         label: "字段",
         type: "input",
-      },
-    ],
-    methods: [
-      {
-        name: "search",
-        desc: "搜索",
       },
     ],
     order: 10,

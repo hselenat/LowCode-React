@@ -7,28 +7,39 @@ export default (ctx: Context) => {
     name: "Modal",
     desc: "对话框-4",
     defaultProps: {
-      text: {
+      title: {
         type: "static",
-        value: "对话框",
+        value: "标题",
       },
     },
     dev: ModalDev,
     prod: ModalProd,
     setter: [
       {
-        name: "type",
-        label: "对话框",
-        type: "select",
-        options: [
-          {
-            name: "title",
-            label: "页面标题",
-            type: "input",
-          },
-        ],
+        name: "title",
+        label: "标题",
+        type: "input",
       },
     ],
     methods: [
+      {
+        name: "open",
+        desc: "显示",
+      },
+      {
+        name: "close",
+        desc: "隐藏",
+      },
+      {
+        name: "startConfirmLoading",
+        desc: "开始确认按钮loading",
+      },
+      {
+        name: "endConfirmLoading",
+        desc: "结束确认按钮loading",
+      },
+    ],
+    events: [
       {
         name: "onOk",
         desc: "确定",
@@ -36,12 +47,6 @@ export default (ctx: Context) => {
       {
         name: "onCancel",
         desc: "取消",
-      },
-    ],
-    events: [
-      {
-        name: "click",
-        desc: "点击事件",
       },
     ],
     order: 4,

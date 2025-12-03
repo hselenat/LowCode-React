@@ -1,7 +1,3 @@
-import {Input as AntdInput} from "antd";
-
-const SearchFormItem = (props: any) => {
-  return <AntdInput type={props.type} value={props.value} />;
-};
+const SearchFormItem = () => <></>;
 
 export default SearchFormItem;
