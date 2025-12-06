@@ -79,6 +79,7 @@ const EditStage: React.FC = () => {
   const [{canDrop}, dropRef] = useDrop({
     // 可以接受的元素类型
     accept: [
+      ItemType.Box,
       ItemType.Space,
       ItemType.Text,
       ItemType.Button,

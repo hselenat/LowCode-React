@@ -1,5 +1,6 @@
 export const ItemType = {
   // Page: "Page",
+  Box: "Box",
   Text: "Text",
   Space: "Space",
   Button: "Button",

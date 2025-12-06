@@ -34,6 +34,7 @@ const Layout: React.FC = () => {
     await Promise.all(tasks);
     // 注册组件到全局组件配置状态
     setComponentConfig(componentConfigRef.current);
+    console.log("componentConfigRef.current", componentConfigRef.current);
     setLoading(false);
   }
 
