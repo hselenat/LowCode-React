@@ -1,5 +1,10 @@
 import {Form, Select} from "antd";
-import React, {forwardRef, useImperativeHandle, useState} from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import ShowMessageSetting from "./show-message";
 import ComponentMethodSetting from "./component-method";
 import SetVariableSetting from "./set-variable";
@@ -51,8 +56,18 @@ function ActionSettingPanel(
   }: {graphRef: any; curModelRef: any; setSettingOpen: any},
   ref: any
 ) {
+  // 保存当前模型的副本到组件内部状态
+  const [currentModel, setCurrentModel] = useState<any>(
+    curModelRef?.current || {}
+  );
   const [values, setValues] = useState<any>(curModelRef?.current?.config || {});
   const [form] = Form.useForm();
+  // 当外部模型变化时更新内部状态
+  useEffect(() => {
+    if (curModelRef?.current) {
+      setCurrentModel(curModelRef.current);
+    }
+  }, [curModelRef]);
 
   useUpdateEffect(() => {
     form.setFieldsValue({
@@ -73,6 +88,11 @@ function ActionSettingPanel(
   );
 
   function save(config: any) {
+    // 添加严格的空值检查
+    if (!currentModel?.id) {
+      console.error("当前模型ID为空，无法更新");
+      return;
+    }
     let menus = [
       {
         label: "成功",
@@ -115,8 +135,8 @@ function ActionSettingPanel(
         },
       ];
     }
-    graphRef?.current?.updateItem(curModelRef?.current?.id, {
-      ...curModelRef?.current,
+    graphRef?.current?.updateItem(currentModel?.id, {
+      ...currentModel,
       config,
       label: EventActionTypeDesc[values.type],
       menus,
