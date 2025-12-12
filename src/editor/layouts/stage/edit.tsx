@@ -204,7 +204,7 @@ const EditStage = (_: any, ref: any) => {
   // });
 
   return (
-    <div className="stage flex-1 h-[100%] p-[24px]">
+    <div className="stage flex-1 h-[100%]">
       <React.Suspense fallback="loading...">
         {renderComponents(components)}
       </React.Suspense>

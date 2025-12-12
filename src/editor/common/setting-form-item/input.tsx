@@ -13,7 +13,7 @@ interface Props {
   onChange?: (value: IValue) => void;
 }
 
-const SettingFormItemInput: React.FC<Props> = ({value, onChange}) => {
+const SettingFormItemInput: React.FC<Props> = ({value, onChange}: Props) => {
   const [visible, setVisible] = useState(false);
   function valueChange(e: any) {
     onChange?.({

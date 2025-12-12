@@ -10,7 +10,7 @@ const Form: React.FC<CommonComponentProps> = (props: CommonComponentProps) => {
   const searchItems = useMemo(() => {
     return React.Children.map(children, (item: any) => {
       return {
-        id: item.props.id,
+        id: item.props._id,
         label: item.props.label,
         name: item.props.name,
         type: item.props.type,

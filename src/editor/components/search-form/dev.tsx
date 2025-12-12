@@ -17,7 +17,7 @@ const SearchForm: React.FC<CommonComponentProps> = (
         label: item.props?.label,
         name: item.props?.name,
         type: item.props?.type,
-        id: item.props?.id,
+        id: item.props?._id,
       };
     });
   }, [children]);
@@ -41,7 +41,7 @@ const SearchForm: React.FC<CommonComponentProps> = (
 
   return (
     <div
-      className="w-[100%]"
+      className="w-[100%] pt-[20px]"
       ref={dropRef as unknown as React.RefObject<HTMLDivElement>}
       data-component-id={_id}
       style={{border: canDrop ? "1px solid #ccc" : "none"}}

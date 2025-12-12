@@ -1,7 +1,7 @@
 import {SettingOutlined} from "@ant-design/icons";
-import {Switch} from "antd";
+import {Checkbox} from "antd";
 import {useState} from "react";
-import SelectVariableModal from "./select-variable-modal";
+import SelectVariableModal from "../select-variable-modal";
 
 interface Value {
   type: "static" | "variable";
@@ -13,31 +13,32 @@ interface Props {
   onChange?: (value: Value) => void;
 }
 
-const SettingFormItemSwitch: React.FC<Props> = ({value, onChange}: Props) => {
-  const [visible, setVisible] = useState<boolean>(false);
+const SettingFormItemCheckbox: React.FC<Props> = ({value, onChange}) => {
+  const [visible, setVisible] = useState(false);
 
-  function select(record: Value) {
-    onChange?.({
-      type: "variable",
-      value: record.value,
-    });
-    setVisible(false);
-  }
-  function valueChange(checked: boolean) {
+  function valueChange(e: any) {
     onChange?.({
       type: "static",
-      value: checked,
+      value: e?.target?.checked,
     });
   }
+
+  function select(record: any) {
+    onChange?.({
+      type: "variable",
+      value: record.name,
+    });
+
+    setVisible(false);
+  }
+
   return (
     <div className="flex gap-[8px]">
-      <Switch
+      <Checkbox
         disabled={value?.type === "variable"}
         checked={value?.type === "static" || !value ? value?.value : ""}
         onChange={valueChange}
-        checkedChildren="隐藏"
-        unCheckedChildren="显示"
-      ></Switch>
+      />
       <SettingOutlined
         onClick={() => {
           setVisible(true);
@@ -47,11 +48,13 @@ const SettingFormItemSwitch: React.FC<Props> = ({value, onChange}: Props) => {
       />
       <SelectVariableModal
         open={visible}
-        onCancel={() => setVisible(false)}
+        onCancel={() => {
+          setVisible(false);
+        }}
         onSelect={select}
-      ></SelectVariableModal>
+      />
     </div>
   );
 };
 
-export default SettingFormItemSwitch;
+export default SettingFormItemCheckbox;

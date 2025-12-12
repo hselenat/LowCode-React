@@ -158,10 +158,10 @@ function SelectedMask(props: Props, ref: any) {
               style={{
                 padding: "0 8px",
                 backgroundColor: "#1890ff",
-                // color: "#fff",
-                // borderRadius: 4,
-                // cursor: "pointer",
-                // whiteSpace: "nowrap",
+                color: "#fff",
+                borderRadius: 4,
+                cursor: "pointer",
+                whiteSpace: "nowrap",
               }}
             >
               <Popconfirm

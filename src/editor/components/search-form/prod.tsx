@@ -26,7 +26,7 @@ const SearchForm: React.FC<CommonComponentProps> = (
   };
 
   return (
-    <div className="w-[100%]">
+    <div className="w-[100%] pt-[20px]">
       <Form form={form} onFinish={search}>
         <Row gutter={20}>
           {searchItems.map((item: any) => {

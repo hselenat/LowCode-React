@@ -1,8 +1,7 @@
 import {Space as AntdSpace} from "antd";
 // import type {SpaceSize} from "antd/es/space";
 import React from "react";
-import {useDrop} from "react-dnd";
-import {ItemType} from "../../item-type";
+import {useDrop} from "../../hooks/use-drop";
 import type {CommonComponentProps} from "../../interface";
 
 // interface Props {
@@ -17,24 +16,14 @@ import type {CommonComponentProps} from "../../interface";
 // }
 
 const Space: React.FC<CommonComponentProps> = (props: CommonComponentProps) => {
-  const {_id, children, direction = "horizontal", size = "middle"} = props;
-  const [{canDrop}, dropRef] = useDrop(() => ({
-    accept: [
-      ItemType.Space,
-      ItemType.Button,
-      ItemType.Table,
-      ItemType.SearchForm,
-    ],
-    drop: (_, monitor) => {
-      const didDrop = monitor.didDrop();
-      if (didDrop) return;
-      return {_id};
-    },
-    collect: (monitor) => ({
-      canDrop: monitor.canDrop(),
-      isOver: monitor.isOver(),
-    }),
-  }));
+  const {
+    _id,
+    _name,
+    children,
+    direction = "horizontal",
+    size = "middle",
+  } = props;
+  const {canDrop, dropRef} = useDrop(_id, _name);
 
   if (!children.length)
     return (

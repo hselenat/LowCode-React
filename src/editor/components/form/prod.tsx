@@ -62,16 +62,19 @@ const Form = (Props: CommonComponentProps, ref: any) => {
         label: item.props.label,
         name: item.props.name,
         type: item.props.type,
+        rules: item.props?.rules,
       };
     });
   }, [children]);
 
   async function save(values: any) {
+    // 格式化日期值：将dayjs对象转换为字符串格式
     Object.keys(values).forEach((key) => {
       if (dayjs.isDayjs(values[key])) {
         values[key] = values[key].format("YYYY-MM-DD");
       }
     });
+    // 如果配置了URL，则调用接口
     if (url) {
       try {
         const response = await axios.post(url, values, {
@@ -79,11 +82,13 @@ const Form = (Props: CommonComponentProps, ref: any) => {
             "Content-Type": "application/json",
           },
         });
-
-        onFinish(response.data);
+        // 如果接口调用成功，则执行onSaveSuccess事件或者其他操作
+        console.log("API调用成功:", response?.data);
+        // 执行提交事件
+        onFinish(response?.data);
       } catch (error) {
         console.error("API调用失败:", error);
-        // 可以考虑添加错误处理事件
+        // 可以考虑添加错误处理事件或者其他操作
         onFinish(values);
       }
     } else {
