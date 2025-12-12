@@ -1,24 +1,31 @@
-import {Form as AntdForm, Input} from "antd";
-import React, {forwardRef, useImperativeHandle, useMemo} from "react";
+import {Form as AntdForm, DatePicker, Input} from "antd";
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+  useEffect,
+} from "react";
 import axios from "axios";
+import type {CommonComponentProps} from "../../interface";
+import dayjs from "dayjs";
 
-interface Props {
-  /** 组件的id */
-  id: number;
-  /** 提交表单的url接口地址 */
-  url?: string;
-  /** 子组件，表单项 */
-  children: any;
-  /** 搜索事件 */
-  onSearch?: (values: any) => void;
-  /** 保存成功事件 */
-  onSaveSuccess?: (values: any) => void;
-  /** 保存失败事件 */
-  onSaveFail?: (error: any) => void;
-}
+// interface Props {
+//   /** 组件的id */
+//   id: number;
+//   /** 提交表单的url接口地址 */
+//   url?: string;
+//   /** 子组件，表单项 */
+//   children: any;
+//   /** 搜索事件 */
+//   onSearch?: (values: any) => void;
+//   /** 保存成功事件 */
+//   onSaveSuccess?: (values: any) => void;
+//   /** 保存失败事件 */
+//   onSaveFail?: (error: any) => void;
+// }
 
-const Form = (Props: Props, ref: any) => {
-  const {children, onSaveSuccess, onSaveFail, url} = Props;
+const Form = (Props: CommonComponentProps, ref: any) => {
+  const {defaultValue, children, onFinish, url} = Props;
   const [form] = AntdForm.useForm();
 
   useImperativeHandle(
@@ -33,6 +40,21 @@ const Form = (Props: Props, ref: any) => {
     [form]
   );
 
+  useEffect(() => {
+    if (defaultValue) {
+      const data: any = {};
+      React.Children.toArray(children).forEach((item: any) => {
+        if (item.props.type === "date") {
+          data[item.props.name] = dayjs(defaultValue[item.props.name]);
+        } else {
+          data[item.props.name] = defaultValue[item.props.name];
+        }
+      });
+
+      form.setFieldsValue(data);
+    }
+  }, [defaultValue, children, form]);
+
   const searchItems = useMemo(() => {
     return React.Children.map(children, (item: any) => {
       return {
@@ -45,18 +67,27 @@ const Form = (Props: Props, ref: any) => {
   }, [children]);
 
   async function save(values: any) {
-    try {
-      if (url) {
-        await axios.post(url, values);
-        if (onSaveSuccess) {
-          onSaveSuccess?.(values);
-        }
+    Object.keys(values).forEach((key) => {
+      if (dayjs.isDayjs(values[key])) {
+        values[key] = values[key].format("YYYY-MM-DD");
       }
-    } catch (error) {
-      console.error("保存失败:", error);
-      if (onSaveFail) {
-        onSaveFail?.(error);
+    });
+    if (url) {
+      try {
+        const response = await axios.post(url, values, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        onFinish(response.data);
+      } catch (error) {
+        console.error("API调用失败:", error);
+        // 可以考虑添加错误处理事件
+        onFinish(values);
       }
+    } else {
+      onFinish(values);
     }
   }
 
@@ -69,8 +100,23 @@ const Form = (Props: Props, ref: any) => {
       onFinish={save}
     >
       {searchItems.map((item: any) => (
-        <AntdForm.Item key={item.id} label={item.label} name={item.name}>
-          <Input placeholder="请输入" />
+        <AntdForm.Item
+          key={item.id}
+          label={item.label}
+          name={item.name}
+          rules={
+            item.rules === "required"
+              ? [
+                  {
+                    required: true,
+                    message: "不能为空",
+                  },
+                ]
+              : []
+          }
+        >
+          {item.type === "input" && <Input />}
+          {item.type === "date" && <DatePicker />}
         </AntdForm.Item>
       ))}
     </AntdForm>

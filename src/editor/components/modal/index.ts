@@ -1,10 +1,11 @@
 import ModalDev from "./dev";
 import ModalProd from "./prod";
 import type {Context} from "../../interface";
+import {ItemType} from "../../item-type";
 
 export default (ctx: Context) => {
-  ctx.registerComponent("Modal", {
-    name: "Modal",
+  ctx.registerComponent(ItemType.Modal, {
+    name: ItemType.Modal,
     desc: "对话框",
     defaultProps: {
       title: {
@@ -50,5 +51,6 @@ export default (ctx: Context) => {
       },
     ],
     order: 4,
+    allowDrag: [ItemType.Page, ItemType.Space],
   });
 };

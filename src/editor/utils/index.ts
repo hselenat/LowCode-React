@@ -1,5 +1,7 @@
 import type {Component} from "../store/components";
 import React from "react";
+import {useComponentConfigStore} from "../store/component-config";
+
 /**
  * 根据 id 递归查找组件
  *
@@ -61,3 +63,18 @@ export async function loadRemoteComponent(url: string) {
   func(module, exports, require);
   return {default: module.exports} as any;
 }
+
+/**
+ * 获取组件允许拖入的组件
+ * @param componentName 组件名
+ * @returns
+ */
+export const getAcceptDrop = (componentName: string) => {
+  const {componentConfig} = useComponentConfigStore.getState();
+
+  return (
+    Object.values(componentConfig)
+      .filter((o: any) => o.allowDrag?.includes(componentName))
+      .map((o: any) => o.name) || []
+  );
+};

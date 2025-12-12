@@ -6,23 +6,20 @@ import ComponentAttr from "./component-attr";
 import ComponentEvent from "./component-event";
 
 const Setting: React.FC = () => {
-  const {curComponentId} = useComponentsStore();
-  const [key, setKey] = useState<SegmentedValue>("attr");
-  if (!curComponentId) return null;
+  const {curComponentId, curComponent} = useComponentsStore();
+  const [key, setKey] = useState<SegmentedValue>("属性");
+  if (!curComponentId || !curComponent) return null;
   return (
     <div>
       <Segmented
         block
-        options={[
-          {label: "属性", value: "attr"},
-          {label: "事件", value: "event"},
-        ]}
+        options={["属性", "事件"]}
         value={key}
         onChange={setKey}
       />
       <div className="pt-[20px]">
-        {key === "attr" && <ComponentAttr />}
-        {key === "event" && <ComponentEvent />}
+        {key === "属性" && <ComponentAttr />}
+        {key === "事件" && <ComponentEvent />}
       </div>
     </div>
   );

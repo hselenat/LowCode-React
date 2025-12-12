@@ -1,10 +1,11 @@
 import SearchFormDev from "./dev";
 import SearchFormProd from "./prod";
 import type {Context} from "../../interface";
+import {ItemType} from "../../item-type";
 
 export default (ctx: Context) => {
-  ctx.registerComponent("SearchForm", {
-    name: "SearchForm",
+  ctx.registerComponent(ItemType.SearchForm, {
+    name: ItemType.SearchForm,
     desc: "搜索区",
     defaultProps: {},
     dev: SearchFormDev,
@@ -16,5 +17,6 @@ export default (ctx: Context) => {
       },
     ],
     order: 9,
+    allowDrag: [ItemType.Page, ItemType.Space],
   });
 };

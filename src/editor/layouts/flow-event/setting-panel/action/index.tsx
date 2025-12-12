@@ -6,6 +6,10 @@ import SetVariableSetting from "./set-variable";
 import ExecScriptSetting from "./exec-script";
 import AsyncTaskSetting from "./async-task";
 import {useUpdateEffect} from "ahooks";
+import RequestSetting from "./request";
+import ConfirmSetting from "./confirm";
+
+const FormItem = Form.Item;
 
 /**
  * 操作设置面板
@@ -13,34 +17,42 @@ import {useUpdateEffect} from "ahooks";
  * 组件方法 componentMethod
  * 设置变量 setVariable
  * 执行脚本 execScript
+ * 异步任务 asyncTask
+ * 接口请求 request
+ * 显示确认框 confirm
  * @returns
  */
 
 const actionMap: any = {
-  showMessage: ShowMessageSetting,
-  componentMethod: ComponentMethodSetting,
-  setVariable: SetVariableSetting,
-  execScript: ExecScriptSetting,
-  asyncTask: AsyncTaskSetting,
+  ShowMessage: ShowMessageSetting,
+  ComponentMethod: ComponentMethodSetting,
+  SetVariable: SetVariableSetting,
+  ExecScript: ExecScriptSetting,
+  AsyncTask: AsyncTaskSetting,
+  Request: RequestSetting,
+  Confirm: ConfirmSetting,
 };
 
 const EventActionTypeDesc: any = {
-  showMessage: "显示提示",
-  componentMethod: "组件方法",
-  setVariable: "设置变量",
-  execScript: "执行脚本",
-  asyncTask: "异步任务",
+  ShowMessage: "显示提示",
+  ComponentMethod: "组件方法",
+  SetVariable: "设置变量",
+  ExecScript: "执行脚本",
+  AsyncTask: "异步任务",
+  Request: "接口请求",
+  Confirm: "显示确认框",
 };
 
 function ActionSettingPanel(
-  {graphRef, curModelRef, setSettingOpen}: any,
+  {
+    graphRef,
+    curModelRef,
+    setSettingOpen,
+  }: {graphRef: any; curModelRef: any; setSettingOpen: any},
   ref: any
 ) {
-  const [values, setValues] = useState<any>(curModelRef.current?.config || {});
+  const [values, setValues] = useState<any>(curModelRef?.current?.config || {});
   const [form] = Form.useForm();
-  const valueChange = (_: any, allValues: any) => {
-    setValues(allValues);
-  };
 
   useUpdateEffect(() => {
     form.setFieldsValue({
@@ -61,36 +73,61 @@ function ActionSettingPanel(
   );
 
   function save(config: any) {
-    graphRef.current.updateItem(curModelRef.current.id, {
-      ...curModelRef.current,
+    let menus = [
+      {
+        label: "成功",
+        key: "success",
+        nodeType: "event",
+        nodeName: "成功",
+        eventKey: "success",
+      },
+      {
+        label: "失败",
+        key: "error",
+        nodeType: "event",
+        nodeName: "失败",
+        eventKey: "error",
+      },
+      {
+        label: "成功或失败",
+        key: "finally",
+        nodeType: "event",
+        nodeName: "成功或失败",
+        eventKey: "finally",
+      },
+    ];
+
+    if (config.type === "Confirm") {
+      menus = [
+        {
+          label: "确认",
+          key: "confirm",
+          nodeType: "event",
+          nodeName: "确认",
+          eventKey: "confirm",
+        },
+        {
+          label: "取消",
+          key: "cancel",
+          nodeType: "event",
+          nodeName: "取消",
+          eventKey: "cancel",
+        },
+      ];
+    }
+    graphRef?.current?.updateItem(curModelRef?.current?.id, {
+      ...curModelRef?.current,
       config,
       label: EventActionTypeDesc[values.type],
-      menus: [
-        {
-          label: "成功",
-          key: "success",
-          nodeType: "event",
-          nodeName: "成功",
-          eventKey: "success",
-        },
-        {
-          label: "失败",
-          key: "error",
-          nodeType: "event",
-          nodeName: "失败",
-          eventKey: "error",
-        },
-        {
-          label: "成功或失败",
-          key: "finally",
-          nodeType: "event",
-          nodeName: "成功或失败",
-          eventKey: "finally",
-        },
-      ],
+      menus,
     });
     setSettingOpen(false);
   }
+
+  function valueChange(_: any, allValues: any) {
+    setValues(allValues);
+  }
+  console.log(curModelRef.current?.config, "curModelRef.current?.config");
   return (
     <Form
       form={form}
@@ -100,16 +137,16 @@ function ActionSettingPanel(
       onValuesChange={valueChange}
       onFinish={save}
     >
-      <Form.Item label="动作类型" name="type">
+      <FormItem label="动作类型" name="type">
         <Select
-          options={[
-            {label: "显示提示", value: "showMessage"},
-            {label: "组件方法", value: "componentMethod"},
-            {label: "设置变量", value: "setVariable"},
-            {label: "执行脚本", value: "execScript"},
-          ]}
+          options={Object.keys(actionMap)
+            .filter((key) => EventActionTypeDesc[key])
+            .map((key) => ({
+              label: EventActionTypeDesc[key],
+              value: key,
+            }))}
         />
-      </Form.Item>
+      </FormItem>
       {actionMap[values.type] &&
         React.createElement(actionMap[values.type], {values})}
     </Form>

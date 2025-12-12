@@ -38,17 +38,55 @@ interface State {
 }
 
 interface Action {
-  /** 添加组件 */
+  /**
+   * 添加组件
+   * @param component 组件属性
+   * @param parentId 上级组件id
+   * @returns
+   */
   addComponent: (component: Component, parentId?: number) => void;
-  /** 设置当前选中的组件ID */
+  /**
+   * 设置当前组件id
+   * @param componentId 当前组件id
+   * @returns
+   */
   setCurComponentId: (componentId?: number | null) => void;
-  /** 更新当前选择组件的属性 */
+  /**
+   * 更新组件属性
+   * @param componentId 组件id
+   * @param props 新组件属性
+   * @returns
+   */
   updateComponentProps: (componentId: number, props: any) => void;
-  /** 设置编辑模式或预览模式 */
-  setMode: (mode: "edit" | "preview") => void;
-  /** 设置编辑类型 */
+  /**
+   * 更新组件
+   * @param componentId 组件id
+   * @param key key
+   * @param value value
+   * @returns
+   */
+  updateComponent: (
+    componentId: number,
+    key: keyof Component,
+    value: any
+  ) => void;
+  /**
+   * 设置模式
+   * @param mode 模式
+   * @returns
+   */
+  setMode: (mode: State["mode"]) => void;
+  /**
+   *  设置编辑类型
+   * @param editType
+   * @returns
+   */
   setEditType: (editType: State["editType"]) => void;
-  /** 删除组件 */
+  /**
+   * 删除组件
+   * @param componentId 组件id
+   * @returns
+   */
   deleteComponent: (componentId: number | null | undefined) => void;
 }
 
@@ -77,8 +115,15 @@ interface Action {
 export const useComponentsStore = create(
   persist<State & Action>(
     (set, get) => ({
-      components: [], // 初始化默认有一个页面
-      curComponentId: null,
+      components: [
+        {
+          id: 1,
+          name: "Page",
+          props: {},
+          desc: "页面",
+        },
+      ], // 初始化默认有一个页面
+      // curComponentId: null,
       curComponent: null,
       mode: "edit",
       editType: "page",
@@ -128,6 +173,24 @@ export const useComponentsStore = create(
           return {components: [...state.components]};
         });
       },
+      updateComponent: (
+        componentId: number,
+        key: keyof Component,
+        value: any
+      ) => {
+        set((state: any) => {
+          const component = getComponentById(componentId, state.components);
+          if (component) {
+            if (key === "desc") {
+              component[key] = value;
+            } else if (key === "hidden") {
+              component[key] = value;
+            }
+            return {components: [...state.components]};
+          }
+          return {components: [...state.components]};
+        });
+      },
       setMode: (mode: "edit" | "preview") => {
         set({mode});
       },
@@ -146,13 +209,14 @@ export const useComponentsStore = create(
             );
             set({components: [...get().components]});
           }
-        } else {
-          set({
-            components: get().components.filter(
-              (item) => item.id !== +componentId
-            ),
-          });
         }
+        // else {
+        //   set({
+        //     components: get().components.filter(
+        //       (item) => item.id !== +componentId
+        //     ),
+        //   });
+        // }
       },
     }),
     {

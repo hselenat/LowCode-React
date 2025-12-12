@@ -23,12 +23,13 @@ const ContextMenu: React.FC<Props> = (props: Props) => {
     >
       <Dropdown
         menu={{
-          items,
+          items: items.map((item) => ({label: item.label, key: item.key})),
           onClick: onSelect,
         }}
-        trigger={["click"]}
         open={open}
-      />
+      >
+        <a onClick={(e) => e.preventDefault()}></a>
+      </Dropdown>
     </div>
   );
 };

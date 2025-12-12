@@ -5,19 +5,29 @@ import {useComponentConfigStore} from "../../store/component-config";
 import {useMemo} from "react";
 import type {ComponentConfig} from "../../interface";
 
-const Material: React.FC = () => {
+interface Props {
+  onDragging: () => void;
+}
+const Material: React.FC<Props> = (props: Props) => {
+  const {onDragging} = props;
   const {addComponent} = useComponentsStore();
   const {componentConfig} = useComponentConfigStore();
   /**
    * 拖拽结束时，添加组件到画布
    * @param dropResult 拖拽结果
    */
-  const onDragEnd = (dropResult: {name: string; props: any; id?: number}) => {
+  const onDragEnd = (dropResult: {
+    name: string;
+    props: any;
+    id?: number;
+    desc: string;
+  }) => {
     console.log("onDragEnd", dropResult);
     addComponent(
       {
         id: new Date().getTime(),
         name: dropResult.name,
+        desc: dropResult.desc,
         props: {
           ...dropResult.props,
         },
@@ -28,15 +38,15 @@ const Material: React.FC = () => {
 
   const components = useMemo(() => {
     // 加载所有组件
-    const componentsNew = Object.values(componentConfig).map(
-      (config: ComponentConfig) => {
+    const componentsNew = Object.values(componentConfig)
+      .filter((o) => !o.hiddenInMaterial)
+      .map((config: ComponentConfig) => {
         return {
           name: config.name,
           description: config.desc,
           order: config.order,
         };
-      }
-    );
+      });
     componentsNew.sort((a, b) => a.order - b.order);
     return componentsNew;
   }, [componentConfig]);
@@ -58,8 +68,13 @@ const Material: React.FC = () => {
         description="远程组件"
         onDragEnd={onDragEnd}
       /> */}
-      {components.map((item) => (
-        <ComponentItem key={item.name} onDragEnd={onDragEnd} {...item} />
+      {components.map((item: any) => (
+        <ComponentItem
+          key={item.name}
+          onDragging={onDragging}
+          onDragEnd={onDragEnd}
+          {...item}
+        />
       ))}
     </div>
   );

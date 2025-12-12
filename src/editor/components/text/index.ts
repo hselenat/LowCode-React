@@ -1,12 +1,13 @@
 import TextDev from "./dev";
 import TextProd from "./prod";
 import type {Context} from "../../interface";
+import {ItemType} from "../../item-type";
 
 // 对外暴露一个注册组件的方法，这个方法可以同步/异步的返回组件
 // 的配置，我们可以在任何地方和时机调用这个方法，进行组件注册
 export default (ctx: Context) => {
-  ctx.registerComponent("Text", {
-    name: "Text",
+  ctx.registerComponent(ItemType.Text, {
+    name: ItemType.Text,
     desc: "标题文本", // 组件描述
     defaultProps: {
       text: {
@@ -131,5 +132,6 @@ export default (ctx: Context) => {
       },
     ],
     order: 2,
+    allowDrag: [],
   });
 };

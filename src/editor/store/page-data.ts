@@ -20,6 +20,12 @@ interface Action {
    * @returns
    */
   resetData: () => void;
+  /**
+   * 合并数据
+   * @param data
+   * @returns
+   */
+  mergeData: (data: any) => void;
 }
 
 export const usePageDataStore = create<State & Action>((set) => ({
@@ -27,4 +33,5 @@ export const usePageDataStore = create<State & Action>((set) => ({
   setData: (key, value) =>
     set((state) => ({data: {...state.data, [key]: value}})),
   resetData: () => set({data: {}}),
+  mergeData: (data) => set((state) => ({data: {...state.data, ...data}})),
 }));

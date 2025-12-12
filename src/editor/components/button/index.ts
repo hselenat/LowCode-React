@@ -2,6 +2,7 @@ import ButtonDev from "./dev";
 import ButtonProd from "./prod";
 // import type {ComponentConfig} from "../../interface";
 import type {Context} from "../../interface";
+import {ItemType} from "../../item-type";
 
 // 对外暴露一个注册组件的方法，这个方法可以同步/异步的返回组件
 // 的配置，我们可以在任何地方和时机调用这个方法，进行组件注册
@@ -9,8 +10,8 @@ export default (ctx: Context) => {
   // 模拟生产中需要异步的去拉去组件的CDN文件的过程
   return new Promise((resolve) => {
     setTimeout(() => {
-      ctx.registerComponent("Button", {
-        name: "Button",
+      ctx.registerComponent(ItemType.Button, {
+        name: ItemType.Button,
         desc: "按钮", // 组件描述
         defaultProps: {
           text: {
@@ -59,6 +60,7 @@ export default (ctx: Context) => {
           },
         ],
         order: 3,
+        allowDrag: [ItemType.Page, ItemType.Space],
       });
       // 异步拉去组件的CDN文件，成功后resolve
       resolve({});

@@ -1,16 +1,16 @@
 import SearchFormItemDev from "./dev";
 import SearchFormItemProd from "./prod";
 import type {Context} from "../../interface";
+import {ItemType} from "../../item-type";
 
 export default (ctx: Context) => {
-  ctx.registerComponent("SearchFormItem", {
-    name: "SearchFormItem",
+  ctx.registerComponent(ItemType.SearchFormItem, {
+    name: ItemType.SearchFormItem,
     desc: "搜索项",
     defaultProps: () => {
       return {
         name: {type: "static", value: new Date().getTime()},
         label: {type: "static", value: "标题"},
-        // type: 'input',
       };
     },
     dev: SearchFormItemDev,
@@ -39,5 +39,6 @@ export default (ctx: Context) => {
       },
     ],
     order: 10,
+    allowDrag: [ItemType.SearchForm],
   });
 };

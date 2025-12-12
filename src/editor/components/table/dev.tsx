@@ -1,35 +1,20 @@
 import React, {useMemo} from "react";
 import {Table as AntdTable} from "antd";
-import {useDrop} from "react-dnd";
-import {ItemType} from "../../item-type";
+import {useDrop} from "../../hooks/use-drop";
+import type {CommonComponentProps} from "../../interface";
 
-interface Props {
-  /** 当前组件的id */
-  id: number;
-  /** 当前组件的子节点 */
-  children?: any[];
-}
-
-const Table: React.FC<Props> = (props: Props) => {
-  const {id, children} = props;
-  const [{canDrop}, dropRef] = useDrop(() => ({
-    accept: [ItemType.TableColumn],
-    drop: (_, monitor) => {
-      const didDrop = monitor.didDrop();
-      if (didDrop) return;
-      return {id};
-    },
-    collect: (monitor) => ({
-      canDrop: monitor.canDrop(),
-      isOver: monitor.isOver(),
-    }),
-  }));
+const Table: React.FC<CommonComponentProps> = (props: CommonComponentProps) => {
+  const {_id, _name, children} = props;
+  const {canDrop, dropRef} = useDrop(_id, _name);
 
   const columns: any = useMemo(() => {
     return React.Children.map(children, (item: any) => {
       return {
         title: (
-          <div className="m-[16px] p-[16px]" data-component-id={item.props?.id}>
+          <div
+            className="m-[16px] p-[16px]"
+            data-component-id={item.props?._id}
+          >
             {item.props?.title}
           </div>
         ),
@@ -41,8 +26,8 @@ const Table: React.FC<Props> = (props: Props) => {
 
   return (
     <div
-      ref={dropRef as unknown as React.Ref<HTMLTableElement>}
-      data-component-id={id}
+      ref={dropRef as unknown as React.Ref<HTMLDivElement>}
+      data-component-id={_id}
       className="w-[100%]"
       style={{
         border: canDrop ? "1px solid #ccc" : "none",

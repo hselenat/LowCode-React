@@ -1,13 +1,11 @@
 import {Button, Col, Form, Input, Row, Space} from "antd";
 import React, {useMemo} from "react";
+import type {CommonComponentProps} from "../../interface";
 
-interface Props {
-  id: number;
-  children?: any[];
-  onSearch?: (values: any) => void;
-}
-
-const SearchForm: React.FC<Props> = ({id, children, onSearch}) => {
+const SearchForm: React.FC<CommonComponentProps> = (
+  props: CommonComponentProps
+) => {
+  const {children, onSearch} = props;
   const [form] = Form.useForm();
 
   const searchItems = useMemo(() => {
@@ -28,7 +26,7 @@ const SearchForm: React.FC<Props> = ({id, children, onSearch}) => {
   };
 
   return (
-    <div className="w-[100%]" data-component-id={id}>
+    <div className="w-[100%]">
       <Form form={form} onFinish={search}>
         <Row gutter={20}>
           {searchItems.map((item: any) => {

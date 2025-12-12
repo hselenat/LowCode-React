@@ -15,6 +15,7 @@ import {getTreeDepth} from "./utils";
 import ContextMenu from "./context-menu";
 import ActionSettingPanel from "./setting-panel/action";
 import ConditionSettingPanel from "./setting-panel/condition";
+import {cloneDeep} from "lodash-es";
 
 registerNodes();
 registerLines();
@@ -35,10 +36,17 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
   const settingRef = useRef<any>(null); // 保存当前选中的节点
 
   useEffect(() => {
+    if (!settingOpen) {
+      curModelRef.current = null;
+      setMenuOpen(false);
+    }
+  }, [settingOpen]);
+
+  useEffect(() => {
     // 初始化画布
     if (!containerRef.current) return;
-    const {width} = containerRef.current?.getBoundingClientRect() || {};
-    const depth = getTreeDepth(flowData || data);
+    const {width} = containerRef?.current?.getBoundingClientRect() || {};
+    const depth = getTreeDepth(data);
     const graph = new G6.TreeGraph({
       container: containerRef.current,
       width,
@@ -100,11 +108,17 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
       };
     });
     // 初始化数据
-    graph.data(flowData || data);
+    graph.data(cloneDeep(flowData || data));
     // 渲染图
     graph.render();
     // 画布居中
     graph.fitCenter();
+    // 获取开始节点的位置
+    const rootNodeBBox = graph.findById("root").getBBox();
+    // 获取开始节点在画布上的位置
+    const newBox = graph.getCanvasByPoint(rootNodeBBox.x, rootNodeBBox.y);
+    // 移动画布到上边距为40的位置
+    graph.translate(0, -newBox.y + 40);
     // 保存当前的图实例
     graphRef.current = graph;
     // 绑定节点的点击事件
@@ -114,10 +128,7 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
       const targetType = target?.get("type");
       const name = target?.get("name");
       const model = item.getModel();
-      // 统一节点，不允许重复添加
-      // if (model.id === curModelRef.current.id) {
-      //   return;
-      // }
+
       if (
         ["condition", "action"].includes(model.type) &&
         targetType !== "marker"
@@ -127,7 +138,11 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
         setMenuOpen(false);
         return;
       }
-
+      // 统一节点，不允许重复添加
+      // if (model.id === curModelRef.current?.id) {
+      //   return;
+      // }
+      setMenuOpen(false);
       // 添加新的节点
       if (targetType === "marker" && name === "add-item") {
         // 显示选择菜单: 获取节点的位置，然后在正确的位置渲染选项菜单
@@ -136,17 +151,19 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
         // 获取当前节点的子节点的位置
         const bbox = target.getBBox();
         console.log("bbox===>item", item);
-        curModelRef.current = item.getModel();
         // 获取当前节点在画布上的位置
         const newBox = graph.getClientByPoint(
           bbox.x + itemBox.x + itemBox.width / 2 + 20,
           bbox.y + itemBox.y + itemBox.height / 2 + 6
         );
+        curModelRef.current = item.getModel();
+        const {left, top} =
+          containerRef?.current?.getBoundingClientRect() || {};
         // 保存当前的位置，用来渲染选项面板
         setTimeout(() => {
           setPosition({
-            top: newBox.y,
-            left: newBox.x,
+            top: newBox.y + top!,
+            left: newBox.x + left!,
           });
           // 展示选项菜单
           setMenuOpen(true);
@@ -165,7 +182,19 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
     return () => {
       graph.destroy();
     };
-  }, [flowData]);
+  }, []);
+
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        save: () => {
+          return graphRef.current?.save();
+        },
+      };
+    },
+    []
+  );
 
   const onSelectHandle = ({key}: any) => {
     // 获取到需要新增的节点类型
@@ -174,7 +203,9 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
     const name = menu?.nodeName;
     if (!curModelRef.current) return;
     const id = `n-${Math.random()}`;
-    if (!curModelRef.current.children) curModelRef.current.children = [];
+    if (!curModelRef.current.children) {
+      curModelRef.current.children = [];
+    }
     let menus: any = [];
     if (["condition", "action"].includes(type)) {
       menus = [];
@@ -185,14 +216,14 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
           label: "动作",
           nodeType: "action",
           nodeName: "动作",
-          eventKey: "action", // menu.eventKey,
+          eventKey: menu.eventKey,
         },
         {
           key: "condition",
           label: "条件",
           nodeType: "condition",
           nodeName: "条件",
-          eventKey: "condition", // menu.eventKey,
+          eventKey: menu.eventKey,
         },
       ];
     }
@@ -212,20 +243,9 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
     curModelRef.current = null;
   };
 
-  useImperativeHandle(
-    ref,
-    () => {
-      return {
-        save: () => {
-          return graphRef.current?.save();
-        },
-      };
-    },
-    [graphRef]
-  );
-
-  function saveSetting() {
-    settingRef.current?.save();
+  function save() {
+    debugger;
+    settingRef?.current?.save();
     setSettingOpen(false);
   }
 
@@ -238,6 +258,7 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
           overflowY: "auto",
           overflowX: "hidden",
         }}
+        className="bg-[#F2F7FA]"
         ref={containerRef}
       ></div>
       <ContextMenu
@@ -253,11 +274,15 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
         zIndex={1005}
         width={300}
         onClose={() => setSettingOpen(false)}
-        extra={<Button onClick={saveSetting}>确定</Button>}
+        extra={
+          <Button onClick={save} type="primary">
+            确定
+          </Button>
+        }
         destroyOnHidden={true}
       >
-        {settingMap[curModelRef.current?.type] &&
-          React.createElement(settingMap[curModelRef.current?.type], {
+        {settingMap[curModelRef?.current?.type] &&
+          React.createElement(settingMap[curModelRef?.current?.type], {
             graphRef,
             curModelRef,
             setSettingOpen,

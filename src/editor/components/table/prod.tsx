@@ -5,21 +5,22 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import {Table as AntdTable} from "antd";
+import {Table as AntdTable, Divider, Space} from "antd";
 import axios from "axios";
 import dayjs from "dayjs";
+import type {CommonComponentProps} from "../../interface";
 
-interface Props {
-  /** 当前组件的id */
-  id: number;
-  /** 当前组件的子节点 */
-  children: any;
-  /** 当前组件的url */
-  url?: string;
-}
+// interface Props {
+//   /** 当前组件的id */
+//   id: number;
+//   /** 当前组件的子节点 */
+//   children: any;
+//   /** 当前组件的url */
+//   url?: string;
+// }
 
-const Table = (props: Props, ref: any) => {
-  const {children, url} = props;
+const Table = (props: CommonComponentProps, ref: any) => {
+  const {children, url, _execEventFlow} = props;
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<any[]>([]);
   const [searchParams, setSearchParams] = useState<any>({});
@@ -58,7 +59,32 @@ const Table = (props: Props, ref: any) => {
           title: item.props?.title,
           dataIndex: item.props?.dataIndex,
           key: item.props?.dataIndex,
-          render: (value: any) => dayjs(value).format("YYYY-MM-DD"),
+          render: (value: any) =>
+            value ? dayjs(value).format("YYYY-MM-DD") : null,
+        };
+      } else if (item?.props?.type === "option") {
+        return {
+          title: item.props?.title,
+          dataIndex: item.props?.dataIndex,
+          render: (_: any, record: any) => {
+            return (
+              <Space size={0} split={<Divider type="vertical" />}>
+                {item.props.options?.map((option: any) => {
+                  return (
+                    <a
+                      className="select-none"
+                      onClick={() => {
+                        _execEventFlow(option?.event?.children, record, record);
+                      }}
+                      key={option.label}
+                    >
+                      {option.label}
+                    </a>
+                  );
+                })}
+              </Space>
+            );
+          },
         };
       }
       return {

@@ -1,14 +1,15 @@
 import {Dropdown, Space} from "antd";
 import {
-  useState,
   forwardRef,
-  useImperativeHandle,
   useEffect,
+  useImperativeHandle,
   useMemo,
+  useState,
 } from "react";
 import {createPortal} from "react-dom";
 import {useComponentsStore} from "../store/components";
 import {getComponentById} from "../utils";
+import {useComponentConfigStore} from "../store/component-config";
 
 interface Props {
   /** hover中的组件id */
@@ -31,6 +32,7 @@ const HoverMask = (props: Props, ref: any) => {
     toolsLeft: 0,
   });
   const {components, setCurComponentId} = useComponentsStore();
+  const {componentConfig} = useComponentConfigStore();
 
   // 对外暴露更新位置方法
   useImperativeHandle(ref, () => ({
@@ -140,7 +142,7 @@ const HoverMask = (props: Props, ref: any) => {
                 whiteSpace: "nowrap",
               }}
             >
-              {curComponent?.name}
+              {componentConfig[curComponent?.name || ""]?.desc}
             </div>
           </Dropdown>
         </Space>

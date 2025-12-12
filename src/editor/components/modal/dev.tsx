@@ -1,29 +1,14 @@
 import React from "react";
-import {useDrop} from "react-dnd";
-import {ItemType} from "../../item-type";
+import type {CommonComponentProps} from "../../interface";
+import {useDrop} from "../../hooks/use-drop";
 
-const Modal: React.FC<any> = ({id, children, title}) => {
-  const [{canDrop}, dropRef] = useDrop(() => ({
-    accept: [ItemType.Form, ItemType.Table],
-    drop: (_, monitor) => {
-      const didDrop = monitor.didDrop();
-      if (didDrop) {
-        return;
-      }
-
-      return {
-        id,
-      };
-    },
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
-  }));
+const Modal: React.FC<CommonComponentProps> = (props: CommonComponentProps) => {
+  const {_id, _name, title, children} = props;
+  const {canDrop, dropRef} = useDrop(_id, _name);
 
   if (!children?.length) {
     return (
-      <div data-component-id={id} className="p-[10px]">
+      <div data-component-id={_id} className="p-[10px]">
         <h4>{title}</h4>
         <div
           ref={dropRef as unknown as React.RefObject<HTMLDivElement>}
@@ -37,7 +22,7 @@ const Modal: React.FC<any> = ({id, children, title}) => {
   }
 
   return (
-    <div data-component-id={id} className="p-[10px]">
+    <div data-component-id={_id} className="p-[10px]">
       <h4>{title}</h4>
       <div
         ref={dropRef as unknown as React.RefObject<HTMLDivElement>}

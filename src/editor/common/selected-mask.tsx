@@ -12,8 +12,6 @@ import {useComponentsStore} from "../store/components";
 import {getComponentById} from "../utils";
 import {useComponentConfigStore} from "../store/component-config";
 interface Props {
-  /** 选中的组件id */
-  componentId: number;
   /** 容器类名 */
   containerClassName: string;
   /** 相对容器类名 */
@@ -21,7 +19,7 @@ interface Props {
 }
 
 function SelectedMask(props: Props, ref: any) {
-  const {componentId, containerClassName, offsetContainerClassName} = props;
+  const {containerClassName, offsetContainerClassName} = props;
   const {
     curComponent,
     curComponentId,
@@ -46,8 +44,9 @@ function SelectedMask(props: Props, ref: any) {
 
   useEffect(() => {
     updatePosition();
-  }, [componentId]);
+  }, [curComponentId]);
 
+  // 获取当前组件的父组件
   const parentComponents = useMemo(() => {
     const parentComponents = [];
     let component = curComponent;
@@ -59,10 +58,12 @@ function SelectedMask(props: Props, ref: any) {
   }, [curComponent]);
 
   function updatePosition() {
-    if (!componentId) return;
+    if (!curComponentId) return;
     const container = document.querySelector(`.${offsetContainerClassName}`);
     if (!container) return;
-    const node = document.querySelector(`[data-component-id="${componentId}"]`);
+    const node = document.querySelector(
+      `[data-component-id="${curComponentId}"]`
+    );
     if (!node) return;
     // 获取节点位置
     const {top, left, width, height} = node.getBoundingClientRect();
@@ -107,7 +108,7 @@ function SelectedMask(props: Props, ref: any) {
           border: "1px solid rgba(66, 133, 244)",
           backgroundColor: "rgba(66, 133, 244, 0.2)",
           pointerEvents: "none",
-          zIndex: 13,
+          zIndex: 10,
           borderRadius: 4,
           boxSizing: "border-box",
         }}
@@ -120,24 +121,24 @@ function SelectedMask(props: Props, ref: any) {
           display: !position.width || position.width < 10 ? "none" : "inline",
           transform: "translate(-100%, -100%)",
           color: "#ff4d4f",
-          fontSize: 14,
-          zIndex: 14,
+          fontSize: "14px",
+          zIndex: 11,
         }}
       >
         <Space>
           <Dropdown
             menu={{
               items: parentComponents.map((item) => ({
-                key: item?.id + "",
-                label: item?.name,
+                key: item?.id || "",
+                label: item?.desc || item?.name,
               })),
               onClick: ({key}: {key: string}) => {
-                setCurComponentId(+key);
+                setCurComponentId(Number(key));
               },
             }}
             placement="bottomLeft"
             disabled={parentComponents.length === 0}
-            getPopupContainer={(node) => node.parentElement!}
+            // getPopupContainer={(node) => node.parentElement!}
           >
             <div
               style={{
@@ -152,44 +153,52 @@ function SelectedMask(props: Props, ref: any) {
               {componentConfig[curComponent?.name || ""]?.desc}
             </div>
           </Dropdown>
-          <div
-            style={{
-              padding: "0 8px",
-              backgroundColor: "#1890ff",
-              color: "#fff",
-              borderRadius: 4,
-              cursor: "pointer",
-              whiteSpace: "nowrap",
-            }}
-          >
-            <Popconfirm
-              className="min-w-103px cursor-pointer"
-              title="是否删除该组件？"
-              okText={
-                <div className="delete-confirm-btn" style={{padding: "0 7px"}}>
-                  确定
-                </div>
-              }
-              cancelText={
-                <div className="delete-confirm-btn" style={{padding: "0 7px"}}>
-                  取消
-                </div>
-              }
-              onConfirm={deleteHandle}
-              okButtonProps={{
-                style: {
-                  padding: 0,
-                },
-              }}
-              cancelButtonProps={{
-                style: {
-                  padding: 0,
-                },
+          {+(curComponentId || 0) !== 1 && (
+            <div
+              style={{
+                padding: "0 8px",
+                backgroundColor: "#1890ff",
+                // color: "#fff",
+                // borderRadius: 4,
+                // cursor: "pointer",
+                // whiteSpace: "nowrap",
               }}
             >
-              <DeleteOutlined style={{color: "#fff", fontSize: 16}} />
-            </Popconfirm>
-          </div>
+              <Popconfirm
+                className="min-w-103px cursor-pointer"
+                title="是否删除该组件？"
+                okText={
+                  <div
+                    className="delete-confirm-btn"
+                    style={{padding: "0 7px"}}
+                  >
+                    确定
+                  </div>
+                }
+                cancelText={
+                  <div
+                    className="delete-confirm-btn"
+                    style={{padding: "0 7px"}}
+                  >
+                    取消
+                  </div>
+                }
+                onConfirm={deleteHandle}
+                okButtonProps={{
+                  style: {
+                    padding: 0,
+                  },
+                }}
+                cancelButtonProps={{
+                  style: {
+                    padding: 0,
+                  },
+                }}
+              >
+                <DeleteOutlined style={{color: "#fff", fontSize: 16}} />
+              </Popconfirm>
+            </div>
+          )}
         </Space>
       </div>
     </>,

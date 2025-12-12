@@ -10,18 +10,32 @@ import {useComponentsStore} from "../store/components";
 import type {ComponentConfig} from "../interface";
 import {useComponentConfigStore} from "../store/component-config";
 import {Spin} from "antd";
+import {usePageDataStore} from "../store/page-data";
+import {useVariableStore} from "../store/variable";
+import {clearComponentRef} from "../store/component-ref";
 
 const Layout: React.FC = () => {
   const {mode} = useComponentsStore();
   const {setComponentConfig} = useComponentConfigStore();
   const componentConfigRef = useRef<any>({});
   const [loading, setLoading] = useState<boolean>(true);
+  const {mergeData} = usePageDataStore();
+  const {variables} = useVariableStore();
+  const editStageRef = useRef<any>(null);
   // 注册组件
   function registerComponent(name: string, componentConfig: ComponentConfig) {
     componentConfigRef.current[name] = componentConfig;
   }
   // 加载组件配置
   async function loadComponentConfig() {
+    // 初始化变量到全局数据中
+    mergeData(
+      variables.reduce((prev: any, variable) => {
+        prev[variable.name] = variable.defaultValue;
+        return prev;
+      }, {})
+    );
+
     // 匹配components文件夹下的index.ts文件，加载组件配置模块代码
     const modules = import.meta.glob("../components/*/index.ts", {eager: true});
     // 执行组件配置里的方法，传入注入组件方法
@@ -39,8 +53,13 @@ const Layout: React.FC = () => {
   }
 
   useEffect(() => {
+    clearComponentRef();
     loadComponentConfig();
   }, []);
+
+  function onDragging() {
+    editStageRef.current?.updateSelectedMaskPosition();
+  }
 
   if (loading) {
     return (
@@ -63,10 +82,10 @@ const Layout: React.FC = () => {
       {mode === "edit" ? (
         <Allotment>
           <Allotment.Pane preferredSize={240} maxSize={400} minSize={200}>
-            <Material />
+            <Material onDragging={onDragging} />
           </Allotment.Pane>
           <Allotment.Pane>
-            <EditStage />
+            <EditStage ref={editStageRef} />
           </Allotment.Pane>
           <Allotment.Pane preferredSize={300} maxSize={500} minSize={300}>
             <Setting />

@@ -5,6 +5,7 @@ import {getComponentById} from "../../../../utils";
 import {useMemo} from "react";
 import {useComponentConfigStore} from "../../../../store/component-config";
 
+const FormItem = Form.Item;
 /**
  * 操作设置面板
  * 组件方法 componentMethod
@@ -34,15 +35,15 @@ function ComponentMethodSetting({values}: {values: any}) {
   }, [values?.config?.componentId, components]);
   return (
     <>
-      <Form.Item label="组件" name={["config", "componentId"]}>
+      <FormItem label="组件" name={["config", "componentId"]}>
         <TreeSelect
           style={{width: 170}}
           treeData={components}
           fieldNames={{value: "id", label: "name"}}
         />
-      </Form.Item>
+      </FormItem>
       {componentConfig[component?.name || ""]?.methods && (
-        <Form.Item label="方法" name={["config", "method"]}>
+        <FormItem label="方法" name={["config", "method"]}>
           <Select
             style={{width: 170}}
             options={componentConfig[component?.name || ""]?.methods!.map(
@@ -52,7 +53,7 @@ function ComponentMethodSetting({values}: {values: any}) {
               })
             )}
           />
-        </Form.Item>
+        </FormItem>
       )}
     </>
   );

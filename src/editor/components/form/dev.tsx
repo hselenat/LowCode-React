@@ -1,19 +1,10 @@
 import {Form as AntdForm, Input} from "antd";
 import React, {useMemo} from "react";
-import {useDrop} from "react-dnd";
-import {ItemType} from "../../item-type";
+import {useDrop} from "../../hooks/use-drop";
+import type {CommonComponentProps} from "../../interface";
 
-interface Props {
-  /** 当前组件的id */
-  id: number;
-  /** 当前组件的子节点 */
-  children?: any[];
-  /** 搜索回调 */
-  onSearch?: (values: any) => void;
-}
-
-const Form: React.FC<Props> = (Props) => {
-  const {id, children, onSearch} = Props;
+const Form: React.FC<CommonComponentProps> = (props: CommonComponentProps) => {
+  const {_id, _name, children, onSearch} = props;
   const [form] = AntdForm.useForm();
 
   const searchItems = useMemo(() => {
@@ -29,27 +20,16 @@ const Form: React.FC<Props> = (Props) => {
 
   const search = (values: any) => {
     if (onSearch) {
-      onSearch(values);
+      onSearch?.(values);
     }
   };
 
-  const [{canDrop}, dropRef] = useDrop(() => ({
-    accept: [ItemType.FormItem],
-    drop: (_, monitor) => {
-      const didDrop = monitor.didDrop();
-      if (didDrop) return;
-      return {id};
-    },
-    collect: (monitor) => ({
-      canDrop: monitor.canDrop(),
-      isOver: monitor.isOver(),
-    }),
-  }));
+  const {canDrop, dropRef} = useDrop(_id, _name);
 
   if (!children?.length) {
     return (
       <div
-        data-component-id={id}
+        data-component-id={_id}
         ref={dropRef as unknown as React.Ref<HTMLDivElement>}
         className="p-[16px] flex justify-center"
         style={{border: canDrop ? "1px solid #ccc" : "none"}}
@@ -63,7 +43,7 @@ const Form: React.FC<Props> = (Props) => {
     <div
       className="w-[100%] py-[20px]"
       ref={dropRef as unknown as React.Ref<HTMLDivElement>}
-      data-component-id={id}
+      data-component-id={_id}
       style={{border: canDrop ? "1px solid #ccc" : "none"}}
     >
       <AntdForm

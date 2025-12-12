@@ -2,12 +2,13 @@ import SpaceDev from "./dev";
 import SpaceProd from "./prod";
 // import type {ComponentConfig} from "../../interface";
 import type {Context} from "../../interface";
+import {ItemType} from "../../item-type";
 
 // 对外暴露一个注册组件的方法，这个方法可以同步/异步的返回组件
 // 的配置，我们可以在任何地方和时机调用这个方法，进行组件注册
 export default (ctx: Context) => {
-  ctx.registerComponent("Space", {
-    name: "Space",
+  ctx.registerComponent(ItemType.Space, {
+    name: ItemType.Space,
     desc: "间距",
     defaultProps: {
       size: {
@@ -58,5 +59,6 @@ export default (ctx: Context) => {
       },
     ],
     order: 1,
+    allowDrag: [ItemType.Page, ItemType.Space],
   });
 };
