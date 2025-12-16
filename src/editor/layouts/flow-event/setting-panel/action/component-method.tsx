@@ -39,7 +39,8 @@ function ComponentMethodSetting({values}: {values: any}) {
         <TreeSelect
           style={{width: 170}}
           treeData={components}
-          fieldNames={{value: "id", label: "name"}}
+          fieldNames={{value: "id", label: "desc"}}
+          treeDefaultExpandAll
         />
       </FormItem>
       {componentConfig[component?.name || ""]?.methods && (
@@ -48,7 +49,7 @@ function ComponentMethodSetting({values}: {values: any}) {
             style={{width: 170}}
             options={componentConfig[component?.name || ""]?.methods!.map(
               (method: any) => ({
-                label: method.label,
+                label: method.desc,
                 value: method.name,
               })
             )}

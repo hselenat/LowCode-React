@@ -18,7 +18,7 @@ export const registerLines = () => {
         },
       });
       // 存在label文案，则添加文案
-      if (cfg.label?.length) {
+      if (cfg.label && cfg.label?.length) {
         group.addShape("text", {
           attrs: {
             text: cfg.label,

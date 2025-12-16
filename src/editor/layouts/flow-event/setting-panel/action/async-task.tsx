@@ -19,7 +19,7 @@ function AsyncTaskSetting({values}: {values: any}) {
           }))}
         />
       </Form.Item>
-      {values.config.variable && (
+      {values?.config?.variable && (
         <Form.Item label="值" name={["config", "value"]}>
           <Input style={{width: 240}} />
         </Form.Item>

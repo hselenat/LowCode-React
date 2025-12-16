@@ -97,7 +97,7 @@ export interface ComponentConfig {
   /**
    * 组件属性配置
    */
-  setter?: ComponentSetter[];
+  setter?: ComponentSetter[] | any;
   /**
    * 组件方法
    */

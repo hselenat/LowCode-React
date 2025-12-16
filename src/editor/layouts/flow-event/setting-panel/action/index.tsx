@@ -27,7 +27,6 @@ const FormItem = Form.Item;
  * 显示确认框 confirm
  * @returns
  */
-
 const actionMap: any = {
   ShowMessage: ShowMessageSetting,
   ComponentMethod: ComponentMethodSetting,
@@ -39,7 +38,7 @@ const actionMap: any = {
 };
 
 const EventActionTypeDesc: any = {
-  ShowMessage: "显示提示",
+  ShowMessage: "显示消息",
   ComponentMethod: "组件方法",
   SetVariable: "设置变量",
   ExecScript: "执行脚本",
@@ -65,7 +64,7 @@ function ActionSettingPanel(
   // 当外部模型变化时更新内部状态
   useEffect(() => {
     if (curModelRef?.current) {
-      setCurrentModel(curModelRef.current);
+      setCurrentModel(curModelRef?.current);
     }
   }, [curModelRef]);
 
@@ -153,7 +152,7 @@ function ActionSettingPanel(
       form={form}
       labelCol={{span: 8}}
       wrapperCol={{span: 16}}
-      initialValues={curModelRef.current?.config}
+      initialValues={currentModel?.config}
       onValuesChange={valueChange}
       onFinish={save}
     >

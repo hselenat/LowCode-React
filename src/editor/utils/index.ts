@@ -58,9 +58,10 @@ export async function loadRemoteComponent(url: string) {
       return React;
     }
   };
+  const process = {env: {NODE_ENV: "production"}};
   // 使用new Function()动态执行这段脚本，再把module、exports和require这些变量注入进去
   const func = new Function("module", "exports", "require", script);
-  func(module, exports, require);
+  func(module, exports, require, process);
   return {default: module.exports} as any;
 }
 

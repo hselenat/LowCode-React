@@ -27,6 +27,7 @@ const settingMap: any = {
 };
 
 const EventFlowDesign = ({flowData}: any, ref: any) => {
+  console.log(flowData);
   const containerRef = useRef<HTMLDivElement>(null);
   const [settingOpen, setSettingOpen] = useState<boolean>(false);
   const [position, setPosition] = useState<any>({});
@@ -76,8 +77,8 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
     // 自定义线的类型：在连接线上，渲染出对应的条件名称
     graph.edge((config: any) => {
       // 获取线的源节点和目标节点
-      const sourceNode = graph.findById(config.source);
-      const targetNode = graph.findById(config.target);
+      const sourceNode: any = graph.findById(config.source);
+      const targetNode: any = graph.findById(config.target);
       // 获取源节点和目标节点的配置
       const sourceModel = sourceNode?.getModel();
       const targetModel = targetNode?.getModel();
@@ -85,19 +86,24 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
       let label = "";
       // 如果是条件节点
       if (sourceModel?.type === "condition") {
-        const sourceConfig = sourceModel?.config as
-          | Array<{id: string; name: string}>
-          | undefined;
-        if (sourceConfig) {
-          const foundItem = sourceConfig.find(
-            (item: {id: string; name: string}) =>
-              item.id === targetModel.conditionId
-          );
-          if (foundItem) {
-            const {name} = foundItem;
-            label = name;
-          }
-        }
+        // const sourceConfig = sourceModel?.config as
+        //   | Array<{id: string; name: string}>
+        //   | undefined;
+        // if (sourceConfig) {
+        //   const foundItem = sourceConfig.find(
+        //     (item: {id: string; name: string}) =>
+        //       item.id === targetModel.conditionId
+        //   );
+        //   if (foundItem) {
+        //     const {name} = foundItem;
+        //     label = name;
+        //   }
+        // }
+        const {name} =
+          sourceModel?.config?.find(
+            (o: any) => o.id === targetModel?.conditionId
+          ) || {};
+        label = name;
       }
       return {
         type: "flow-line",
@@ -105,7 +111,7 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
         style: {
           stroke: "#91d5ff",
         },
-      };
+      } as any;
     });
     // 初始化数据
     graph.data(cloneDeep(flowData || data));
@@ -139,9 +145,9 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
         return;
       }
       // 统一节点，不允许重复添加
-      // if (model.id === curModelRef.current?.id) {
-      //   return;
-      // }
+      if (model.id === curModelRef.current?.id) {
+        return;
+      }
       setMenuOpen(false);
       // 添加新的节点
       if (targetType === "marker" && name === "add-item") {
@@ -196,7 +202,7 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
     []
   );
 
-  const onSelectHandle = ({key}: any) => {
+  const onSelect = ({key}: any) => {
     // 获取到需要新增的节点类型
     const menu = curModelRef.current?.menus?.find((o: any) => o?.key === key);
     const type = menu?.nodeType;
@@ -244,9 +250,8 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
   };
 
   function save() {
-    debugger;
     settingRef?.current?.save();
-    setSettingOpen(false);
+    // setSettingOpen(false);
   }
 
   return (
@@ -263,7 +268,7 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
       ></div>
       <ContextMenu
         position={position}
-        onSelect={onSelectHandle}
+        onSelect={onSelect}
         items={curModelRef.current?.menus || []} // data.menus
         open={menuOpen}
       />
@@ -271,7 +276,7 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
       <Drawer
         title="设置"
         open={settingOpen}
-        zIndex={1005}
+        zIndex={1007}
         width={300}
         onClose={() => setSettingOpen(false)}
         extra={
@@ -286,7 +291,10 @@ const EventFlowDesign = ({flowData}: any, ref: any) => {
             graphRef,
             curModelRef,
             setSettingOpen,
-            ref: settingRef,
+            // ref: settingRef,
+            ref: (_ref: any) => {
+              settingRef.current = _ref;
+            },
           })}
       </Drawer>
     </div>

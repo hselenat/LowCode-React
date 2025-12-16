@@ -6,7 +6,7 @@ import {useComponentsStore, type Component} from "../../store/components";
 // import {message} from "antd";
 // import {componentEventMap} from "../../layouts/setting/componentEventMap";
 import {usePageDataStore} from "../../store/page-data";
-import {useVariableStore} from "../../store/variable";
+// import {useVariableStore} from "../../store/variable";
 // import {type Node} from "../flow-event/data";
 import {useComponentConfigStore} from "../../store/component-config";
 import {execEventFlow} from "../../utils/action";
@@ -21,7 +21,7 @@ import {setComponentRef} from "../../store/component-ref";
 const ProdStage: React.FC = () => {
   const {components} = useComponentsStore();
   // const componentRefs = useRef<any>({});
-  const {variables} = useVariableStore();
+  // const {variables} = useVariableStore();
   const {data} = usePageDataStore();
   const {componentConfig} = useComponentConfigStore();
   //   function formatProps(component: Component) {
@@ -224,11 +224,11 @@ const ProdStage: React.FC = () => {
             prev[cur] = component.props[cur]?.value;
           } else if (component.props[cur]?.type === "variable") {
             const variableName = component.props[cur].value;
-            const variable = variables.find(
-              (item) => item.name === variableName
-            );
+            // const variable = variables.find(
+            //   (item) => item.name === variableName
+            // );
             // 如果data中有值，则取data中的值，否则取变量的默认值
-            prev[cur] = data[variableName] || variable?.defaultValue || "";
+            prev[cur] = data[variableName]; // || variable?.defaultValue || "";
           }
         } else {
           // 如果是变量，则取data的值
@@ -239,48 +239,6 @@ const ProdStage: React.FC = () => {
       {} as Record<string, unknown>
     );
     return props;
-  }
-  function renderComponents(components: Component[]): React.ReactNode {
-    return components.map((component: Component) => {
-      if (!componentConfig[component.name]?.prod) {
-        return null;
-      }
-      if (component.hidden?.type === "static" && component.hidden?.value) {
-        return null;
-      }
-      if (
-        component.hidden?.type === "variable" &&
-        component.hidden?.value &&
-        data[component.hidden.value as string] === true
-      ) {
-        return null;
-      }
-
-      let props = formatProps(component);
-      props = {...props, ...handleEvent(component)};
-      // if (componentConfig[component.name]?.prod) {
-      return React.createElement(
-        componentConfig[component.name]?.prod,
-        {
-          key: component.id,
-          _id: component.id,
-          _name: component.name,
-          _execEventFlow: execEventFlow,
-          // "data-component-id": component.id,
-          // ref: (ref: any) => {
-          //   componentRefs.current[component.id] = ref;
-          // },
-          ref: (ref) => {
-            setComponentRef(component.id, ref);
-          },
-          ...component.props,
-          ...props,
-        },
-        component.props.children || renderComponents(component.children || [])
-      );
-      // }
-      // return null;
-    });
   }
 
   // 执行事件流
@@ -384,7 +342,56 @@ const ProdStage: React.FC = () => {
     return props;
   }
 
-  return <div>{renderComponents(components)}</div>;
+  function renderComponents(components: Component[]): React.ReactNode {
+    return components.map((component: Component) => {
+      if (!componentConfig[component.name]?.prod) {
+        return null;
+      }
+      if (component.hidden?.type === "static" && component.hidden?.value) {
+        return null;
+      }
+      if (
+        component.hidden?.type === "variable" &&
+        component.hidden?.value &&
+        data[component.hidden.value as string] === true
+      ) {
+        return null;
+      }
+
+      let props = formatProps(component);
+      props = {...props, ...handleEvent(component)};
+      // if (componentConfig[component.name]?.prod) {
+      return React.createElement(
+        componentConfig[component.name]?.prod,
+        {
+          key: component.id,
+          _id: component.id,
+          _name: component.name,
+          _execEventFlow: execEventFlow,
+          // "data-component-id": component.id,
+          // ref: (ref: any) => {
+          //   componentRefs.current[component.id] = ref;
+          // },
+          ref: (ref) => {
+            setComponentRef(component.id, ref);
+          },
+          ...component.props,
+          ...props,
+        },
+        component.props.children || renderComponents(component.children || [])
+      );
+      // }
+      // return null;
+    });
+  }
+
+  return (
+    <div>
+      <React.Suspense fallback="loading...">
+        {renderComponents(components)}
+      </React.Suspense>
+    </div>
+  );
 };
 
 export default ProdStage;

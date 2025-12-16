@@ -9,7 +9,7 @@ function CommonSetter({setters}: {setters: ComponentSetter[]}) {
    * @returns
    */
   function renderFormElement(setting: any) {
-    const {type, options} = setting;
+    const {type, options = []} = setting;
 
     if (type === "select") {
       return <Select options={options} />;

@@ -40,7 +40,7 @@ const Layout: React.FC = () => {
     const modules = import.meta.glob("../components/*/index.ts", {eager: true});
     // 执行组件配置里的方法，传入注入组件方法
     const tasks = Object.values(modules).map((module: any) => {
-      if (module.default) {
+      if (module?.default) {
         return module.default({registerComponent});
       }
     });
@@ -70,8 +70,8 @@ const Layout: React.FC = () => {
   }
 
   return (
-    <div className="h-[100vh] w-[100vw] flex flex-col">
-      <div className="h-[50px] flex items-center border-b-[1px] border-b-[#e5e5e5]">
+    <div className="h-[100vh] flex flex-col">
+      <div className="h-[50px] flex items-center border-solid border-[1px] border-[#ccc]">
         <Header />
       </div>
       {/* <div className="flex-1 flex">

@@ -13,6 +13,7 @@ const SearchForm: React.FC<CommonComponentProps> = (
 
   const searchItems = useMemo(() => {
     return React.Children.map(children, (item: any) => {
+      console.log("searchItems", item);
       return {
         label: item.props?.label,
         name: item.props?.name,
@@ -41,7 +42,7 @@ const SearchForm: React.FC<CommonComponentProps> = (
 
   return (
     <div
-      className="w-[100%] pt-[20px]"
+      className="w-[100%]"
       ref={dropRef as unknown as React.RefObject<HTMLDivElement>}
       data-component-id={_id}
       style={{border: canDrop ? "1px solid #ccc" : "none"}}

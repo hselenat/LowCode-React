@@ -12,8 +12,9 @@ const Form: React.FC<CommonComponentProps> = (props: CommonComponentProps) => {
       return {
         id: item.props._id,
         label: item.props.label,
-        name: item.props.name,
+        name: item.props._name,
         type: item.props.type,
+        rules: item.props?.rules,
       };
     });
   }, [children]);

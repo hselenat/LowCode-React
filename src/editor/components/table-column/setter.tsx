@@ -5,7 +5,38 @@ import {arrayMove} from "react-sortable-hoc";
 import CommonSetter from "../../common/common-setter";
 import SortableList from "../../common/sortable-list";
 import FlowEvent from "../../layouts/flow-event";
-import {setter} from "./setter-data";
+
+const setter = [
+  {
+    name: "type",
+    label: "类型",
+    type: "select",
+    options: [
+      {
+        label: "文本",
+        value: "text",
+      },
+      {
+        label: "日期",
+        value: "date",
+      },
+      {
+        label: "操作",
+        value: "option",
+      },
+    ],
+  },
+  {
+    name: "title",
+    label: "标题",
+    type: "input",
+  },
+  {
+    name: "dataIndex",
+    label: "字段",
+    type: "input",
+  },
+];
 
 function OptionsFormItem({value = [], onChange}: any) {
   const [open, setOpen] = useState(false);
@@ -17,7 +48,7 @@ function OptionsFormItem({value = [], onChange}: any) {
     onChange([...value]);
   }
 
-  function sortEndHanlde({
+  function sortEndHandle({
     oldIndex,
     newIndex,
   }: {
@@ -45,10 +76,10 @@ function OptionsFormItem({value = [], onChange}: any) {
           items={value || []}
           hiddenEdit
           onDelete={(item: any) => {
-            const index = value.findIndex(
+            const index = value?.findIndex(
               (v: any) => v.dataIndex === item.dataIndex
             );
-            value.splice(index, 1);
+            value?.splice(index, 1);
             onChange([...value]);
           }}
           itemRender={(item: any) => (
@@ -79,7 +110,7 @@ function OptionsFormItem({value = [], onChange}: any) {
             </Space>
           )}
           useDragHandle
-          onSortEnd={sortEndHanlde}
+          onSortEnd={sortEndHandle}
         />
       </div>
       <div className="px-[20px]">
@@ -88,7 +119,14 @@ function OptionsFormItem({value = [], onChange}: any) {
           block
           type="dashed"
           onClick={() => {
-            onChange([...value, {key: new Date().getTime(), label: ""}]);
+            onChange([
+              ...value,
+              {
+                key: new Date().getTime(),
+                label: "",
+                // dataIndex: `option_${new Date().getTime()}`,
+              },
+            ]);
           }}
         >
           添加
@@ -108,7 +146,7 @@ function OptionsFormItem({value = [], onChange}: any) {
           </Button>
         }
         push={false}
-        destroyOnClose
+        destroyOnHidden={true}
         styles={{body: {padding: 0}}}
       >
         <FlowEvent flowData={curItem?.event} ref={flowEventRef} />

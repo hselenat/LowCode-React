@@ -1,7 +1,7 @@
 import {SettingOutlined} from "@ant-design/icons";
 import {Checkbox} from "antd";
 import {useState} from "react";
-import SelectVariableModal from "../select-variable-modal";
+import SelectVariableModal from "./select-variable-modal";
 
 interface Value {
   type: "static" | "variable";

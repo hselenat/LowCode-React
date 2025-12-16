@@ -91,13 +91,14 @@ function ConditionSettingPanel(
               {id: new Date().getTime().toString()},
             ]);
           }}
+          type="primary"
         >
           添加条件
         </Button>
       </div>
       <Modal
         title="条件设置"
-        visible={conditionVisible}
+        open={conditionVisible}
         zIndex={1007}
         onCancel={() => {
           setConditionVisible(false);
@@ -107,16 +108,16 @@ function ConditionSettingPanel(
           setConditionVisible(false);
         }}
       >
-        <div>
-          {/* // todo 代码编辑器替换textArea */}
-          <Input.TextArea
-            value={conditionValue}
-            rows={10}
-            onChange={(e) => {
-              setConditionValue(e.target.value);
-            }}
-          ></Input.TextArea>
-        </div>
+        {/* <div> */}
+        {/* // todo 代码编辑器替换textArea */}
+        <Input.TextArea
+          value={conditionValue}
+          rows={10}
+          onChange={(e) => {
+            setConditionValue(e.target.value);
+          }}
+        ></Input.TextArea>
+        {/* </div> */}
       </Modal>
     </div>
   );

@@ -3,8 +3,8 @@ import React from "react";
 
 interface Props {
   position: {
-    top: number;
-    left: number;
+    top?: number;
+    left?: number;
   };
   onSelect: (item: any) => void;
   items: {label: string; key: string}[];
