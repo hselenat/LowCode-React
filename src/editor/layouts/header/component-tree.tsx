@@ -25,7 +25,7 @@ const ComponentTree = ({open, onCancel}: ComponentTreeProps) => {
     >
       <Tree
         showLine
-        fieldNames={{title: "name", key: "id"}}
+        fieldNames={{title: "desc", key: "id"}}
         treeData={components as any}
         defaultExpandAll={true}
         onSelect={componentSelect}
